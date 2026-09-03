@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title><?=$title ?? 'Web Gis Sekolah'?></title>
+  <title><?=$title ?? 'SIMALA - Sistem Monitoring Alat'?></title>
 
   <!-- Custom fonts for this template-->
   <link href="<?= base_url('components/fontawesome-free/css/all.min.css'); ?>" rel="stylesheet" type="text/css">
@@ -20,7 +20,7 @@
 
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary" style="background: linear-gradient(180deg, #0ba6b1 0%, #0ba6b1 35%, #0ba6b1 100%) !important;">
 <?= $this->renderSection('content'); ?>
 
   <!-- Bootstrap core JavaScript-->

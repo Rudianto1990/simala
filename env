@@ -50,7 +50,7 @@ app.baseURL = 'http://localhost:8080'
 #--------------------------------------------------------------------
 
 database.default.hostname = 127.0.0.1
-database.default.database = webgis-ci
+database.default.database = simala_db
 database.default.username = root
 database.default.password = 
 database.default.DBDriver = MySQLi

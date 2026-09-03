@@ -14,7 +14,7 @@
                         <div class="col-lg">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Web GIS Sekolah</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">SIMALA - Monitoring Alat</h1>
                                 </div>
                                 <form action="/auth/prosesregis" method="POST" class="user">
                                 <div class="form-group">

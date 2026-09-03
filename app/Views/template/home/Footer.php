@@ -3,13 +3,10 @@
 
     <div class="container">
         <div class="copyright">
-            &copy; Copyright <strong><span>WIO CODE</span></strong>. All Rights Reserved
+            &copy; Copyright <strong><span>CODE</span></strong>. All Rights Reserved
         </div>
         <div class="credits">
-            <!-- Web Gis Dengan CodeIgniter di kembangkan oleh Ricky Martin Ginting
-            Email : rickymartinginting503@gmail.com
-            Facebook : facebook.com/icky.12 -->
-            Made with <span style="color: #e25555;">&hearts;</span> in Medan
+            <span style="color: #e25555;">&hearts;</span> 
         </div>
     </div>
 </footer><!-- End Footer -->

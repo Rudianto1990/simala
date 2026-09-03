@@ -20,6 +20,44 @@
         <!-- Custom styles for this template-->
         <link href="<?=base_url('css/sb-admin-2.min.css');?>" rel="stylesheet">
 
+        <style>
+            .bg-gradient-darktheme {
+                background: linear-gradient(180deg, #0ba6b1 0%, #0ba6b1 35%, #0ba6b1 100%) !important;
+            }
+
+            .sidebar {
+                background: linear-gradient(180deg, #0ba6b1 0%, #0ba6b1 100%) !important;
+            }
+
+            .sidebar .nav-item .nav-link {
+                color: rgba(255,255,255,0.8) !important;
+            }
+
+            .sidebar .nav-item .nav-link:hover {
+                color: #ffffff !important;
+                background: rgba(189, 209, 206, 0.64);
+            }
+
+            .sidebar .nav-item.active > .nav-link,
+            .sidebar .nav-item .nav-link.active {
+                color: #ffffff !important;
+                background: rgba(227, 235, 233, 0.64);
+            }
+
+            .sidebar .sidebar-brand {
+                color: #ffffff !important;
+            }
+
+            .sidebar .sidebar-divider {
+                border-top-color: rgba(106, 212, 226, 0.12) !important;
+            }
+
+            .sidebar #sidebarToggle {
+                background-color: rgba(4, 128, 107, 0.64);
+                color: #ffffff;
+            }
+        </style>
+
         <!-- Custom styles for this page -->
         <link href="<?=base_url('components/datatables/dataTables.bootstrap4.min.css');?>" rel="stylesheet">
 
@@ -61,15 +99,15 @@
 
 
                 <li class="nav-item">
-                    <a class="nav-link" href="<?=base_url('form/datasekolah');?>">
-                        <i class="fas fa-fw fa-table"></i>
-                        <span>Data Sekolah</span></a>
+                    <a class="nav-link" href="<?=base_url('form/dataalat');?>">
+                        <i class="fas fa-fw fa-wrench"></i>
+                        <span>Data Alat</span></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="<?=base_url('form/createsekolah');?>">
-                        <i class="fas fa-fw fa-table"></i>
-                        <span>Input Sekolah</span></a>
+                    <a class="nav-link" href="#">
+                       <i class="fas fa-fw fa-cogs"></i>
+                        <span>Settings</span></a>
                 </li>
 
 
@@ -132,8 +170,8 @@
                     <footer class="sticky-footer bg-white">
                         <div class="container my-auto">
                             <div class="copyright text-center my-auto">
-                                <span>Copyright &copy; <?=$appname;?> 2020</span>
-                                Made with <span style="color: #e25555;">&hearts;</span> in Medan
+                                <span>Copyright &copy; <?= date('Y'); ?> www.harmoko.com </span>
+                                Made with <span style="color: #e25555;">&hearts;</span> By <a href="https://www.harmoko.com" target="_blank">Harmoko</a>
                             </div>
                         </div>
                     </footer>

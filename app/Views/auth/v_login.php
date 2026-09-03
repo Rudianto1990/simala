@@ -13,7 +13,7 @@
                         <div class="col-lg">
                             <div class="p-5">
                                 <div class="text-center">
-                                    <h1 class="h4 text-gray-900 mb-4">Web GIS Sekolah</h1>
+                                    <h1 class="h4 text-gray-900 mb-4">SIMALA - Monitoring Alat</h1>
                                 </div>
                                 <?php if (session()->getFlashdata('pesan')) {
     echo session()->getFlashdata('pesan');}
@@ -28,7 +28,7 @@
                                         <input type="password" class="form-control form-control-user"
                                             id="exampleInputPassword" placeholder="Password" name="password">
                                     </div>
-                                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Login">
+                                    <input type="submit" class="btn btn-success btn-user btn-block" value="Login">
                                 </form>
                                 <hr>
 

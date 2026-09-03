@@ -15,7 +15,7 @@ class Auth extends BaseController
     public function index()
     {
         return view('auth/v_login', [
-            'title' => 'Web Gis Sekolah - Login',
+            'title' => 'SIMALA - Login',
             'data' => $this->UserModel->countAllResults(),
         ]);
     }
@@ -37,18 +37,23 @@ class Auth extends BaseController
 
                 return redirect()->to('/dashboard');
             }
-        } else {
+
             session()->setFlashdata('pesan', '<div class="alert alert-primary" role="alert">
-                Email tidak ditemukan
+                Email atau password salah
             </div>');
             return redirect()->to('/auth/login');
         }
+
+        session()->setFlashdata('pesan', '<div class="alert alert-primary" role="alert">
+            Email tidak ditemukan
+        </div>');
+        return redirect()->to('/auth/login');
     }
 
     public function register()
     {
         return view('auth/v_register', [
-            'title' => 'Web Gis Sekolah - Register',
+            'title' => 'SIMALA - Register',
         ]);
     }
 
@@ -66,7 +71,7 @@ class Auth extends BaseController
                 'rules' => 'required|is_unique[tbl_users.email]',
                 'errors' => [
                     'required' => 'Email wajib di isi',
-                    'is_unique' => 'Email telah terdaftar di Web Gis Sekolah',
+                    'is_unique' => 'Email telah terdaftar di SIMALA - Monitoring Alat',
                 ],
             ],
             'password' => [

@@ -14,12 +14,10 @@
                 <li><a href="<?= base_url('dashboard/'); ?>">Administrator</a></li>
                 <li class="drop-down"><a href="">Menu</a>
                     <ul>
-                        <li class="drop-down"><a href="#">Data Sekolah</a>
+                        <li class="drop-down"><a href="#">Data Alat</a>
                             <ul>
-                                <li><a href="<?= base_url('?jenjang=sd') ?>">Sekolah Dasar (SD)</a></li>
-                                <li><a href="<?= base_url('?jenjang=smp') ?>">Sekolah Menengah Pertama (SMP)</a></li>
-                                <li><a href="<?= base_url('?jenjang=sma') ?>">Sekolah Menengah Atas (SMA)</a></li>
-                                <li><a href="<?= base_url('?jenjang=smk') ?>">Sekolah Menengah Kejuruan (SMK)</a></li>
+                                <li><a href="<?= base_url('?jenjang=rtg') ?>">Rubber Tyred Gantry (RTG)</a></li>
+                                
                             </ul>
                         </li>
                         <li><a href="<?= base_url('table'); ?>">Table</a></li>
