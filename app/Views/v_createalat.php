@@ -137,7 +137,21 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>Lokasi</label>
-                                        <input type="text" name="lokasi" class="form-control" value="<?= old('lokasi'); ?>">
+                                        <select class="form-control" name="lokasi">
+                                            <option value="Dermaga 100" selected>Dermaga 100</option>
+                                            <option value="Dermaga 101">Dermaga 101</option>
+                                            <option value="Dermaga 102">Dermaga 102</option>
+                                            <option value="Dermaga 103">Dermaga 103</option>
+                                            <option value="Dermaga 300">Dermaga 300</option>
+                                            <option value="Dermaga 301">Dermaga 301</option>
+                                            <option value="Dermaga Jl. Tembus DKB">Dermaga Jl. Tembus DKB</option>
+                                            <option value="Dermaga 114">Dermaga 114</option>
+                                            <option value="Lapangan 009">Lapangan 009</option>
+                                            <option value="Lapangan Inggom">Lapangan Inggom</option>
+                                            <option value="Gudang Pombo">Gudang Pombo</option>  
+                                            <option value="Gudang Ambon">Gudang Ambon</option>      
+                                            <option value="Galangan PSM">Galangan PSM</option>                                                        
+                                        </select>
                                     </div>
                                 </div>
                             </div>

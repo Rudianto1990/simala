@@ -17,20 +17,28 @@ class Dashboard extends BaseController
     {
         $alat = $this->MonitoringAlatModel->getAlat();
 
-        $cc = 0;
+        $mbc = 0;
         $rtg = 0;
-        $rs = 0;
+        $ohc = 0;
         $sltl = 0;
 
         foreach ($alat as $item) {
             $nama = strtoupper((string) ($item['nama_alat'] ?? ''));
 
-            if (stripos($nama, 'CRANE') !== false) {
-                $cc++;
+            if (
+                stripos($nama, 'MBC') !== false ||
+                stripos($nama, 'MOBILE CRANE') !== false ||
+                stripos($nama, 'CONTAINER CRANE') !== false
+            ) {
+                $mbc++;
             } elseif (stripos($nama, 'GANTRY') !== false || stripos($nama, 'RTG') !== false) {
                 $rtg++;
-            } elseif (stripos($nama, 'STACKER') !== false || stripos($nama, 'REACH STACKER') !== false || stripos($nama, 'RS') !== false) {
-                $rs++;
+            } elseif (
+                stripos($nama, 'OHC') !== false ||
+                stripos($nama, 'OVERHEAD CRANE') !== false ||
+                stripos($nama, 'REACH STACKER') !== false
+            ) {
+                $ohc++;
             } elseif (
                 stripos($nama, 'LOADER') !== false ||
                 stripos($nama, 'SIDE LOADER') !== false ||
@@ -47,9 +55,9 @@ class Dashboard extends BaseController
             'appname' => 'SIMALA',
             'heading' => 'Dashboard',
             'data' => $alat,
-            'cc' => $cc,
+            'mbc' => $mbc,
             'rtg' => $rtg,
-            'rs' => $rs,
+            'ohc' => $ohc,
             'sltl' => $sltl,
         ];
 

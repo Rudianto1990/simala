@@ -1,0 +1,15 @@
+CRITICAL - 2026-09-04 03:08:14 --> ErrorException: Undefined variable $heading
+[Method: GET, Route: alat/120504003008]
+in APPPATH\Views\v_detail_alat.php on line 5.
+ 1 APPPATH\Views\v_detail_alat.php(5): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $heading', 'D:\\xampp8.2.12\\htdocs\\simala\\app\\Views\\v_detail_alat.php', 5)
+ 2 SYSTEMPATH\View\View.php(240): include('D:\\xampp8.2.12\\htdocs\\simala\\app\\Views\\v_detail_alat.php')
+ 3 SYSTEMPATH\View\View.php(243): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1268): CodeIgniter\View\View->render('v_detail_alat', [], true)
+ 5 APPPATH\Controllers\Form.php(164): view('v_detail_alat', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Form->detail('120504003008')
+ 7 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Form))
+ 8 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('D:\\xampp8.2.12\\htdocs\\simala\\public\\index.php')

@@ -6,8 +6,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Container Crane (CC)</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= isset($cc) ? $cc : 0; ?></div>
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Mobile Crane (MBC)</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800"><?= isset($mbc) ? $mbc : 0; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-truck-moving fa-2x text-gray-300"></i>
@@ -38,8 +38,8 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Reach Stacker (RS)</div>
-                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= isset($rs) ? $rs : 0; ?></div>
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Overhead Crane (OHC)</div>
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800"><?= isset($ohc) ? $ohc : 0; ?></div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-ship fa-2x text-gray-300"></i>
