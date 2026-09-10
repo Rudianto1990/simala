@@ -27,7 +27,7 @@
                         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
-                                    <th>Foto</th>
+                                   <!--<th>Foto</th>-->
                                     <th>Nomor Asset</th>
                                     <th>Nama Alat</th>
                                     <th>Kode Alat</th>
@@ -41,11 +41,11 @@
                                 <!-- Looping alat coy -->
                                 <?php foreach ($data as $i) { ?>
                                     <tr>
-                                        <td>
-                                            <img src="<?= base_url('img/alat/' . $i['foto_alat']); ?>" width="80px" height="80px" class="img-fluid" alt="<?= $i['nama_alat']; ?>">
-                                        </td>
-                                        <td><?= $i['nomor_asset']; ?></td>
-                                        <td><a href="<?= base_url('alat/' . $i['slug']); ?>" target="_blank"><?= $i['nama_alat']; ?></a></td>
+                                        <!--<td>
+                                            <img src="<?//= base_url('img/alat/' . $i['foto_alat']); ?>" width="80px" height="80px" class="img-fluid" alt="<?//= $i['nama_alat']; ?>">
+                                        </td>-->
+                                        <td><a href="<?= base_url('alat/' . $i['nomor_asset']); ?>" target="_blank"><?= $i['nomor_asset']; ?></a></td>
+                                        <td><?= $i['nama_alat']; ?></a></td>
                                         <td><?= $i['kode_alat']; ?></td>
                                         <td><?= $i['merk']; ?></td>
                                         <td>

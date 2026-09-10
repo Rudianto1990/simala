@@ -1,0 +1,48 @@
+ERROR - 2026-09-09 02:36:23 --> Error connecting to the database: mysqli_sql_exception: No connection could be made because the target machine actively refused it in D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:201
+Stack trace:
+#0 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php(201): mysqli->real_connect('127.0.0.1', 'root', Object(SensitiveParameterValue), 'simala_db', 3306, '', 0)
+#1 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#2 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#3 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(1743): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Model.php(525): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+#5 D:\xampp8.2.12\htdocs\simala\app\Controllers\Auth.php(19): CodeIgniter\Model->countAllResults()
+#6 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(974): App\Controllers\Auth->index()
+#7 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#8 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#10 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 D:\xampp8.2.12\htdocs\simala\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\rewrite.php(44): require_once('D:\\xampp8.2.12\\...')
+#13 {main}
+
+Next CodeIgniter\Database\Exceptions\DatabaseException: No connection could be made because the target machine actively refused it in D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\MySQLi\Connection.php:231
+Stack trace:
+#0 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseConnection.php(555): CodeIgniter\Database\MySQLi\Connection->connect(false)
+#1 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+#2 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Database\BaseBuilder.php(1743): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#3 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Model.php(525): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+#4 D:\xampp8.2.12\htdocs\simala\app\Controllers\Auth.php(19): CodeIgniter\Model->countAllResults()
+#5 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(974): App\Controllers\Auth->index()
+#6 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+#7 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#8 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Boot.php(417): CodeIgniter\CodeIgniter->run()
+#9 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#10 D:\xampp8.2.12\htdocs\simala\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#11 D:\xampp8.2.12\htdocs\simala\vendor\codeigniter4\framework\system\rewrite.php(44): require_once('D:\\xampp8.2.12\\...')
+#12 {main}
+CRITICAL - 2026-09-09 02:36:23 --> CodeIgniter\Database\Exceptions\DatabaseException: Unable to connect to the database.
+Main connection [MySQLi]: No connection could be made because the target machine actively refused it
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 606.
+ 1 SYSTEMPATH\Database\BaseConnection.php(795): CodeIgniter\Database\BaseConnection->initialize()
+ 2 SYSTEMPATH\Database\BaseBuilder.php(1743): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `tbl_users`', [], false)
+ 3 SYSTEMPATH\Model.php(525): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 4 APPPATH\Controllers\Auth.php(19): CodeIgniter\Model->countAllResults()
+ 5 SYSTEMPATH\CodeIgniter.php(974): App\Controllers\Auth->index()
+ 6 SYSTEMPATH\CodeIgniter.php(520): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Auth))
+ 7 SYSTEMPATH\CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('D:\\xampp8.2.12\\htdocs\\simala\\public\\index.php')

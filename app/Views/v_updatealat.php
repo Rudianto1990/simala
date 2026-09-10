@@ -105,7 +105,21 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Lokasi</label>
-                                    <input type="text" name="lokasi" class="form-control" value="<?= old('lokasi', $data['lokasi']); ?>">
+                                    <select name="lokasi" class="form-control">
+                                        <option value="Dermaga 100" <?= old('lokasi', $data['lokasi']) == 'Dermaga 100' ? 'selected' : ''; ?>>Dermaga 100</option>
+                                        <option value="Dermaga 101" <?= old('lokasi', $data['lokasi']) == 'Dermaga 101' ? 'selected' : ''; ?>>Dermaga 101</option>
+                                        <option value="Dermaga 102" <?= old('lokasi', $data['lokasi']) == 'Dermaga 102' ? 'selected' : ''; ?>>Dermaga 102</option>
+                                        <option value="Dermaga 103" <?= old('lokasi', $data['lokasi']) == 'Dermaga 103' ? 'selected' : ''; ?>>Dermaga 103</option>
+                                        <option value="Dermaga 300" <?= old('lokasi', $data['lokasi']) == 'Dermaga 300' ? 'selected' : ''; ?>>Dermaga 300</option>
+                                        <option value="Dermaga 301" <?= old('lokasi', $data['lokasi']) == 'Dermaga 301' ? 'selected' : ''; ?>>Dermaga 301</option>
+                                         <option value="Dermaga Jl. Tembus DKB" <?= old('lokasi', $data['lokasi']) == 'Dermaga Jl. Tembus DKB' ? 'selected' : ''; ?>>Dermaga Jl. Tembus DKB</option>
+                                        <option value="Dermaga 114" <?= old('lokasi', $data['lokasi']) == 'Dermaga 114' ? 'selected' : ''; ?>>Dermaga 114</option>
+                                        <option value="Lapangan 009" <?= old('lokasi', $data['lokasi']) == 'Lapangan 009' ? 'selected' : ''; ?>>Lapangan 009</option>
+                                         <option value="Lapangan Inggom" <?= old('lokasi', $data['lokasi']) == 'Lapangan Inggom' ? 'selected' : ''; ?>>Lapangan Inggom</option>
+                                        <option value="Gudang Pombo" <?= old('lokasi', $data['lokasi']) == 'Gudang Pombo' ? 'selected' : ''; ?>>Gudang Pombo</option>
+                                        <option value="Gudang Ambon" <?= old('lokasi', $data['lokasi']) == 'Gudang Ambon' ? 'selected' : ''; ?>>Gudang Ambon</option>
+                                        <option value="Galangan PSM" <?= old('lokasi', $data['lokasi']) == 'Galangan PSM' ? 'selected' : ''; ?>>Galangan PSM</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +178,17 @@
 <link rel="stylesheet" href="<?= base_url('js/leaflet/leaflet.css'); ?>">
 <script src="<?= base_url('js/leaflet/leaflet.js'); ?>"></script>
 <script>
-    var curLocation = [<?= old('latitude', $data['latitude'] ?? -6.2088); ?>, <?= old('longitude', $data['longitude'] ?? 106.8456); ?>];
+    var curLocation = [
+        <?= json_encode(old('latitude', $data['latitude'] ?? null)); ?>,
+        <?= json_encode(old('longitude', $data['longitude'] ?? null)); ?>
+    ].map(Number);
+
+    if (!Number.isFinite(curLocation[0]) || !Number.isFinite(curLocation[1]) ||
+        (curLocation[0] === 0 && curLocation[1] === 0)) {
+        curLocation = [-6.2088, 106.8456];
+        document.getElementById('Latitude').value = curLocation[0];
+        document.getElementById('Longitude').value = curLocation[1];
+    }
 
     var mymap = L.map('mapid').setView(curLocation, 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -188,5 +212,9 @@
         document.getElementById('Latitude').value = position.lat;
         document.getElementById('Longitude').value = position.lng;
     });
+
+    setTimeout(function () {
+        mymap.invalidateSize();
+    }, 150);
 </script>
 <?= $this->endSection(); ?>
