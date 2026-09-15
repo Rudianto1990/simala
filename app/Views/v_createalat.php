@@ -177,11 +177,19 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
+
                                         <label>Status</label>
                                         <select name="status" class="form-control">
                                             <option value="Milik" <?= old('status') == 'Milik' ? 'selected' : ''; ?>>Milik</option>
                                             <option value="Sewa" <?= old('status') == 'Sewa' ? 'selected' : ''; ?>>Sewa</option>
                                         </select>
+
+                                        <label>Koordinat Y (latitude)</label>
+                                        <input type="text" id="Latitude" name="latitude" class="form-control" value="<?= old('latitude'); ?>">
+                                        <?php if (isset($validation)) : ?>
+                                            <small class="text-danger"><?= $validation->getError('latitude'); ?></small>
+                                        <?php endif; ?>
+
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -284,33 +292,34 @@
 <link rel="stylesheet" href="<?= base_url('js/leaflet/leaflet.css'); ?>">
 <script src="<?= base_url('js/leaflet/leaflet.js'); ?>"></script>
 <script>
-    var curLocation = [0, 0];
-    if (curLocation[0] == 0 && curLocation[1] == 0) {
-        curLocation = [-6.2088, 106.8456];
-    }
+    var denahUrl = '<?= base_url('img/denah/denah.png'); ?>';
+    var mapBounds = [[0, 0], [1000, 1600]];
+    var mymap = L.map('mapid', { crs: L.CRS.Simple, minZoom: -5, maxZoom: 4 });
+    var denahOverlay = L.imageOverlay(denahUrl, mapBounds).addTo(mymap);
+    mymap.fitBounds(mapBounds);
 
-    var mapBaseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    denahOverlay.once('load', function () {
+        var image = denahOverlay.getElement();
+        if (image && image.naturalWidth && image.naturalHeight) {
+            mapBounds = [[0, 0], [image.naturalHeight, image.naturalWidth]];
+            denahOverlay.setBounds(mapBounds);
+            mymap.fitBounds(mapBounds);
+        }
     });
 
-    var mymap = L.map('mapid').setView(curLocation, 12);
-    mapBaseLayer.addTo(mymap);
-
-    var marker = new L.marker(curLocation, { draggable: true });
+    var marker = new L.marker([0, 0], { draggable: true });
     marker.on('dragend', function (event) {
         var position = marker.getLatLng();
-        marker.setLatLng(position, { draggable: 'true' }).bindPopup(position).update();
-        document.getElementById('Latitude').value = position.lat;
-        document.getElementById('Longitude').value = position.lng;
+        document.getElementById('Latitude').value = Math.round(position.lat);
+        document.getElementById('Longitude').value = Math.round(position.lng);
     });
     mymap.addLayer(marker);
 
     mymap.on('click', function (e) {
         var position = e.latlng;
         marker.setLatLng(position);
-        document.getElementById('Latitude').value = position.lat;
-        document.getElementById('Longitude').value = position.lng;
+        document.getElementById('Latitude').value = Math.round(position.lat);
+        document.getElementById('Longitude').value = Math.round(position.lng);
     });
 
     var fullscreenMap = null;
@@ -321,15 +330,15 @@
             return fullscreenMap;
         }
 
-        fullscreenMap = L.map('fullscreenMap').setView(curLocation, 12);
-        mapBaseLayer.addTo(fullscreenMap);
+        fullscreenMap = L.map('fullscreenMap', { crs: L.CRS.Simple, minZoom: -5, maxZoom: 4 });
+        var fullscreenOverlay = L.imageOverlay(denahUrl, mapBounds).addTo(fullscreenMap);
+        fullscreenMap.fitBounds(mapBounds);
 
-        fullscreenMarker = new L.marker(curLocation, { draggable: true });
+        fullscreenMarker = new L.marker(marker.getLatLng(), { draggable: true });
         fullscreenMarker.on('dragend', function (event) {
             var position = fullscreenMarker.getLatLng();
-            fullscreenMarker.setLatLng(position, { draggable: 'true' }).bindPopup(position).update();
-            document.getElementById('Latitude').value = position.lat;
-            document.getElementById('Longitude').value = position.lng;
+            document.getElementById('Latitude').value = Math.round(position.lat);
+            document.getElementById('Longitude').value = Math.round(position.lng);
             marker.setLatLng(position);
         });
         fullscreenMap.addLayer(fullscreenMarker);
@@ -337,8 +346,8 @@
         fullscreenMap.on('click', function (e) {
             var position = e.latlng;
             fullscreenMarker.setLatLng(position);
-            document.getElementById('Latitude').value = position.lat;
-            document.getElementById('Longitude').value = position.lng;
+            document.getElementById('Latitude').value = Math.round(position.lat);
+            document.getElementById('Longitude').value = Math.round(position.lng);
             marker.setLatLng(position);
         });
 
