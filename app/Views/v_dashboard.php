@@ -112,6 +112,7 @@
 
 <script>
     var alatData = <?= json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    var cctvData = <?= json_encode($cctv ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     var denahUrl = '<?= base_url('img/denah/denah.png'); ?>';
 
     function getCategoryKey(item) {
@@ -148,13 +149,8 @@
     }
 
     var mymap = L.map('mapid', {
-        minZoom: 10,
-        maxZoom: 19
-    });
-
-    var mymap = L.map('mapid', {
         zoomControl: false
-    }).setView([centerLat, centerLng], hasValidPoint ? 10 : 5);
+    }).setView([-6.103, 106.883], 14);
 
     L.control.zoom({
         position: 'topright',
@@ -218,7 +214,7 @@
         opacity: 0.82,
         interactive: true
     }).addTo(mymap);
-    mymap.fitBounds(denahBounds);
+    mymap.setView([-6.103, 106.883], 14);
 
     var dragState = null;
     var resizeState = null;
@@ -244,6 +240,16 @@
         ];
     }
 
+    function getStoredCoordinate(positionY, positionX) {
+        var isGeographic = positionY < 0 && positionX > 90;
+
+        return {
+            mapPosition: isGeographic ? [positionY, positionX] : pixelToLatLng(positionY, positionX),
+            latitude: isGeographic ? positionY : pixelToLatLng(positionY, positionX)[0],
+            longitude: isGeographic ? positionX : pixelToLatLng(positionY, positionX)[1]
+        };
+    }
+
     mymap.on('click', function (event) {
         var x = Math.round(((event.latlng.lng - denahBounds[0][1]) / (denahBounds[1][1] - denahBounds[0][1])) * imageWidth);
         var y = Math.round(((denahBounds[1][0] - event.latlng.lat) / (denahBounds[1][0] - denahBounds[0][0])) * imageHeight);
@@ -252,6 +258,58 @@
     });
 
     var markerLayer = L.layerGroup().addTo(mymap);
+    var cctvMarkerLayer = L.layerGroup().addTo(mymap);
+
+    function renderCctvMarkers() {
+        cctvMarkerLayer.clearLayers();
+
+        cctvData.forEach(function (camera) {
+            var latitude = Number(camera.latitude);
+            var longitude = Number(camera.longitude);
+
+            if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+                return;
+            }
+
+            var cameraIcon = L.divIcon({
+                className: 'cctv-map-marker',
+                html: '<svg width="42" height="52" viewBox="0 0 42 52" xmlns="http://www.w3.org/2000/svg" aria-label="CCTV">' +
+                    '<defs>' +
+                    '<linearGradient id="cctvPinGradient" x1="0%" x2="100%" y1="0%" y2="100%">' +
+                    '<stop offset="0%" stop-color="#1d4ed8"/>' +
+                    '<stop offset="50%" stop-color="#2563eb"/>' +
+                    '<stop offset="100%" stop-color="#0ea5e9"/>' +
+                    '</linearGradient>' +
+                    '</defs>' +
+                    '<path d="M21 2C10.5 2 2 10.5 2 21c0 12.9 19 28.5 19 28.5S40 33.9 40 21C40 10.5 31.5 2 21 2Z" fill="url(#cctvPinGradient)" stroke="#fff" stroke-width="2.2"/>' +
+                    '<rect x="11" y="16" width="20" height="12.5" rx="3" fill="#eff6ff" stroke="#dbeafe" stroke-width="1.5"/>' +
+                    '<path d="M31 18.5l7-3.2v13.4l-7-3.4z" fill="#bfdbfe" stroke="#ffffff" stroke-width="1.2"/>' +
+                    '<circle cx="21" cy="22.5" r="5" fill="#0f172a"/>' +
+                    '<circle cx="21" cy="22.5" r="2.3" fill="#e0f2fe"/>' +
+                    '<circle cx="31" cy="17" r="2" fill="#fca5a5" stroke="#fff" stroke-width="1"/>' +
+                    '</svg>',
+                iconSize: [42, 52],
+                iconAnchor: [21, 50],
+                popupAnchor: [0, -44]
+            });
+            var detailUrl = '<?= base_url('cctv/show'); ?>/' + encodeURIComponent(camera.id);
+            var popup = '<strong>' + escapeMapHtml(camera.nama_camera || 'CCTV') + '</strong><br>' +
+                escapeMapHtml(camera.location || '-') + '<br>' +
+                '<small>Lat: ' + latitude.toFixed(8) + '<br>Lng: ' + longitude.toFixed(8) + '</small><br>' +
+                '<a class="btn btn-primary btn-sm mt-2" href="' + detailUrl + '">Lihat CCTV</a>';
+
+            L.marker([latitude, longitude], { icon: cameraIcon })
+                .bindPopup(popup)
+                .bindTooltip(camera.nama_camera || 'CCTV')
+                .addTo(cctvMarkerLayer);
+        });
+    }
+
+    function escapeMapHtml(value) {
+        return String(value).replace(/[&<>'"]/g, function (character) {
+            return {'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;'}[character];
+        });
+    }
 
     function renderMarkers() {
         markerLayer.clearLayers();
@@ -273,7 +331,8 @@
         var foto = item.foto_alat ? '<?= base_url('img/alat'); ?>/' + item.foto_alat : '<?= base_url('img/alat/default.png'); ?>';
         var latitude = Number(item.latitude);
         var longitude = Number(item.longitude);
-        var googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + latitude + ',' + longitude;
+        var coordinate = getStoredCoordinate(positionY, positionX);
+        var googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + coordinate.latitude + ',' + coordinate.longitude;
 
         var popup = '<div style="min-width:220px;">' +
             '<img src="' + foto + '" class="img-fluid mb-2" style="max-height:120px; width:100%; object-fit:cover;">' +
@@ -354,7 +413,7 @@
             popupAnchor: [0, -34]
         });
 
-    L.marker(pixelToLatLng(positionY, positionX), { icon: customIcon })
+        L.marker(coordinate.mapPosition, { icon: customIcon })
             .bindTooltip(assetLabel, {
                 permanent: true,
                 direction: 'top',
@@ -491,6 +550,7 @@
     });
 
     renderMarkers();
+    renderCctvMarkers();
     updateDenahSettingsInfo();
 </script>
 <?= $this->endSection(); ?>

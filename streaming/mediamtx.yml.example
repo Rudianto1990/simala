@@ -1,0 +1,23 @@
+###############################################
+# MediaMTX example for SIMALA CCTV
+#
+# Copy to mediamtx.yml and replace each source
+# with the RTSP URL of the matching camera.
+# The application expects:
+#   http://127.0.0.1:8888/camera-{id}/index.m3u8
+###############################################
+
+logLevel: info
+
+hls: yes
+hlsAddress: :8888
+
+paths:
+  camera-1:
+    source: rtsp://USERNAME:PASSWORD@CAMERA_IP:554/stream1
+    rtspTransport: tcp
+
+  # Add one path for every row in the cctv table:
+  # camera-2:
+  #   source: rtsp://USERNAME:PASSWORD@CAMERA_IP:554/stream1
+  #   rtspTransport: tcp

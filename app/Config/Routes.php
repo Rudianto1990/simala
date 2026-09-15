@@ -16,6 +16,17 @@ $routes->group('auth', static function ($routes) {
 
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'ceklogin']);
 
+$routes->group('cctv', ['filter' => 'ceklogin'], static function ($routes) {
+    $routes->get('/', 'Cctv::index');
+    $routes->get('create', 'Cctv::create');
+    $routes->post('store', 'Cctv::store');
+    $routes->get('show/(:num)', 'Cctv::show/$1');
+    $routes->get('snapshot/(:num)', 'Cctv::snapshot/$1');
+    $routes->get('edit/(:num)', 'Cctv::edit/$1');
+    $routes->post('update/(:num)', 'Cctv::update/$1');
+    $routes->get('delete/(:num)', 'Cctv::delete/$1');
+});
+
 $routes->group('form', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Form::index');
     $routes->get('createalat', 'Form::createalat');
