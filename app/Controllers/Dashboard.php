@@ -2,20 +2,24 @@
 
 namespace App\Controllers;
 
+use App\Models\CctvModel;
 use App\Models\MonitoringAlatModel;
 
 class Dashboard extends BaseController
 {
     protected $MonitoringAlatModel;
+    protected $CctvModel;
 
     public function __construct()
     {
         $this->MonitoringAlatModel = new MonitoringAlatModel();
+        $this->CctvModel = new CctvModel();
     }
 
     public function index()
     {
         $alat = $this->MonitoringAlatModel->getAlat();
+        $cctv = $this->CctvModel->orderBy('id', 'DESC')->findAll();
 
         $mbc = 0;
         $rtg = 0;
@@ -59,6 +63,7 @@ class Dashboard extends BaseController
             'rtg' => $rtg,
             'ohc' => $ohc,
             'sltl' => $sltl,
+            'cctv' => $cctv,
         ];
 
         return view('v_dashboard', $data);
