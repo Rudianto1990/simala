@@ -21,6 +21,8 @@ $routes->group('form', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('createalat', 'Form::createalat');
     $routes->post('simpan', 'Form::simpan');
     $routes->get('dataalat', 'Form::dataalat');
+    $routes->get('dataalat/export/excel', 'Form::exportExcel');
+    $routes->get('dataalat/export/pdf', 'Form::exportPdf');
     $routes->get('update/(:segment)', 'Form::update/$1');
     $routes->post('prosesupdate/(:segment)', 'Form::prosesupdate/$1');
     $routes->get('hapus/(:num)', 'Form::hapus/$1');

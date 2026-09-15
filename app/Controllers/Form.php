@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\MonitoringAlatModel;
+use Dompdf\Dompdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class Form extends BaseController
 {
@@ -20,7 +23,9 @@ class Form extends BaseController
 
     public function dataalat()
     {
-        $alat = $this->MonitoringAlatModel->getAlat();
+        $filters = $this->reportFilters();
+        $alat = $this->MonitoringAlatModel->getFilteredAlat($filters);
+        $allAlat = $this->MonitoringAlatModel->getAlat();
         $mbc = 0;
         $rtg = 0;
         $ohc = 0;
@@ -63,9 +68,86 @@ class Form extends BaseController
             'rtg' => $rtg,
             'ohc' => $ohc,
             'sltl' => $sltl,
+            'filters' => $filters,
+            'tahunOptions' => $this->uniqueValues($allAlat, 'tahun'),
+            'negaraOptions' => $this->uniqueValues($allAlat, 'negara'),
         ];
 
         return view('v_dataalat', $data);
+    }
+
+    public function exportExcel()
+    {
+        $alat = $this->MonitoringAlatModel->getFilteredAlat($this->reportFilters());
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $headers = ['Nomor Asset', 'Nama Alat', 'Kode Alat', 'Merk', 'Model', 'Kap Swal Ton','Span M','Outreach M', 'Status', 'Tahun', 'Negara', 'Keterangan', 'Lokasi'];
+        $sheet->fromArray($headers, null, 'A1');
+
+        $rows = array_map(static function (array $item) {
+            return [
+                $item['nomor_asset'], 
+                $item['nama_alat'], 
+                $item['kode_alat'], 
+                $item['merk'],
+                $item['model'],
+                $item['kap_swal_ton'],
+                $item['span_m'],
+                $item['outreach_m'],
+                $item['status'], 
+                $item['tahun'], 
+                $item['negara'],
+                $item['keterangan'] ?: 'Non Elektrifikasi', 
+                $item['lokasi'],
+            ];
+        }, $alat);
+        if ($rows !== []) {
+            $sheet->fromArray($rows, null, 'A2');
+        }
+        $sheet->getStyle('A1:M1')->getFont()->setBold(true);
+        foreach (range('A', 'M') as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+
+        $filename = 'laporan-data-alat-' . date('Ymd-His') . '.xlsx';
+        $response = service('response');
+        ob_start();
+        (new Xlsx($spreadsheet))->save('php://output');
+        return $response->download($filename, ob_get_clean());
+    }
+
+    public function exportPdf()
+    {
+        $alat = $this->MonitoringAlatModel->getFilteredAlat($this->reportFilters());
+        $html = '<h2>Laporan Data Alat</h2><table border="1" cellpadding="5" cellspacing="0" width="100%">';
+        $html .= '<thead><tr><th>Nomor Asset</th><th>Nama Alat</th><th>Status</th><th>Tahun</th><th>Negara</th><th>Keterangan</th><th>Lokasi</th></tr></thead><tbody>';
+        foreach ($alat as $item) {
+            $html .= '<tr><td>' . esc($item['nomor_asset']) . '</td><td>' . esc($item['nama_alat']) . '</td><td>' . esc($item['status']) . '</td><td>' . esc($item['tahun']) . '</td><td>' . esc($item['negara']) . '</td><td>' . esc($item['keterangan'] ?: 'Non Elektrifikasi') . '</td><td>' . esc($item['lokasi']) . '</td></tr>';
+        }
+        $html .= '</tbody></table>';
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'landscape');
+        $dompdf->render();
+        return $this->response->download('laporan-data-alat-' . date('Ymd-His') . '.pdf', $dompdf->output());
+    }
+
+    private function reportFilters(): array
+    {
+        return [
+            'status' => trim((string) $this->request->getGet('status')),
+            'keterangan' => trim((string) $this->request->getGet('keterangan')),
+            'tahun' => trim((string) $this->request->getGet('tahun')),
+            'negara' => trim((string) $this->request->getGet('negara')),
+        ];
+    }
+
+    private function uniqueValues(array $alat, string $field): array
+    {
+        $values = array_filter(array_unique(array_column($alat, $field)));
+        sort($values);
+        return $values;
     }
 
     public function createalat()

@@ -46,6 +46,31 @@ class MonitoringAlatModel extends Model
         return $this->where(['slug' => $slug])->first();
     }
 
+    public function getFilteredAlat(array $filters = [])
+    {
+        $builder = $this->builder();
+
+        foreach (['status', 'tahun', 'negara'] as $field) {
+            if (!empty($filters[$field])) {
+                $builder->where($field, $filters[$field]);
+            }
+        }
+
+        if (!empty($filters['keterangan'])) {
+            if ($filters['keterangan'] === 'Elektrifikasi') {
+                $builder->where('keterangan', 'Elektrifikasi');
+            } else {
+                $builder->groupStart()
+                    ->where('keterangan', '')
+                    ->orWhere('keterangan IS NULL', null, false)
+                    ->orWhere('keterangan !=', 'Elektrifikasi')
+                    ->groupEnd();
+            }
+        }
+
+        return $builder->orderBy('id', 'DESC')->get()->getResultArray();
+    }
+
     public function countByStatus($status = '')
     {
         if ($status == '') {

@@ -103,20 +103,25 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Status</label>
-                                        <select name="status" class="form-control">
-                                            <option value="Milik" <?= old('status') == 'Milik' ? 'selected' : ''; ?>>Milik</option>
-                                            <option value="Sewa" <?= old('status') == 'Sewa' ? 'selected' : ''; ?>>Sewa</option>
-                                        </select>
+                                        <label>Latitude</label>
+                                        <input type="text" id="Latitude" name="latitude" class="form-control" value="<?= old('latitude'); ?>">
+                                        <?php if (isset($validation)) : ?>
+                                            <small class="text-danger"><?= $validation->getError('latitude'); ?></small>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Tahun</label>
-                                        <input type="text" name="tahun" class="form-control" value="<?= old('tahun'); ?>">
+                                        <label>Longitude</label>
+                                        <input type="text" id="Longitude" name="longitude" class="form-control" value="<?= old('longitude'); ?>">
+                                        <?php if (isset($validation)) : ?>
+                                            <small class="text-danger"><?= $validation->getError('longitude'); ?></small>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
+
+                            
 
                             <div class="d-flex justify-content-between align-items-center mt-3">
                                 <button type="button" class="btn btn-outline-primary" id="openMapBtn">
@@ -172,20 +177,17 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Latitude</label>
-                                        <input type="text" id="Latitude" name="latitude" class="form-control" value="<?= old('latitude'); ?>">
-                                        <?php if (isset($validation)) : ?>
-                                            <small class="text-danger"><?= $validation->getError('latitude'); ?></small>
-                                        <?php endif; ?>
+                                        <label>Status</label>
+                                        <select name="status" class="form-control">
+                                            <option value="Milik" <?= old('status') == 'Milik' ? 'selected' : ''; ?>>Milik</option>
+                                            <option value="Sewa" <?= old('status') == 'Sewa' ? 'selected' : ''; ?>>Sewa</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>Longitude</label>
-                                        <input type="text" id="Longitude" name="longitude" class="form-control" value="<?= old('longitude'); ?>">
-                                        <?php if (isset($validation)) : ?>
-                                            <small class="text-danger"><?= $validation->getError('longitude'); ?></small>
-                                        <?php endif; ?>
+                                        <label>Tahun</label>
+                                        <input type="text" name="tahun" class="form-control" value="<?= old('tahun'); ?>">
                                     </div>
                                 </div>
                             </div>
