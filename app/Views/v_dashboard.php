@@ -6,7 +6,7 @@
     </div>
 
     <?= $this->include('template/statusBar'); ?>
-<!--MENAMPILAKAN PETA MAPS -->
+<!--MENAMPILAKAN PETA MAPS COYYYYYYYYYYYYYYYYYYYYYYYYYYYYY eror -->
     <div class="row">
         <div class="col">
             <div class="card shadow mb-4">
@@ -107,6 +107,58 @@
 
     .map-asset-label::before {
         border-top-color: transparent;
+    }
+
+    .cctv-map-popup {
+        min-width: 250px;
+    }
+
+    .cctv-map-popup-view {
+        position: relative;
+        overflow: hidden;
+        background: #111827;
+        border-radius: 4px;
+    }
+
+    .cctv-map-popup-view img {
+        display: block;
+        width: 100%;
+        height: 145px;
+        object-fit: contain;
+    }
+
+    .cctv-live-status {
+        color: #198754;
+        font-size: 11px;
+    }
+
+    .cctv-map-popup-view:fullscreen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        background: #030712;
+    }
+
+    .cctv-map-popup-view:fullscreen img {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+    }
+
+    .cctv-popup-fullscreen {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: 0;
+        border-radius: 3px;
+        background: rgba(17, 24, 39, .82);
+        color: #fff;
+        cursor: pointer;
     }
 </style>
 
@@ -259,6 +311,8 @@
 
     var markerLayer = L.layerGroup().addTo(mymap);
     var cctvMarkerLayer = L.layerGroup().addTo(mymap);
+    var cctvSnapshotUrl = '<?= base_url('cctv/snapshot'); ?>';
+    var cctvLiveTimers = {};
 
     function renderCctvMarkers() {
         cctvMarkerLayer.clearLayers();
@@ -273,42 +327,87 @@
 
             var cameraIcon = L.divIcon({
                 className: 'cctv-map-marker',
-                html: '<svg width="42" height="52" viewBox="0 0 42 52" xmlns="http://www.w3.org/2000/svg" aria-label="CCTV">' +
-                    '<defs>' +
-                    '<linearGradient id="cctvPinGradient" x1="0%" x2="100%" y1="0%" y2="100%">' +
-                    '<stop offset="0%" stop-color="#1d4ed8"/>' +
-                    '<stop offset="50%" stop-color="#2563eb"/>' +
-                    '<stop offset="100%" stop-color="#0ea5e9"/>' +
-                    '</linearGradient>' +
-                    '</defs>' +
-                    '<path d="M21 2C10.5 2 2 10.5 2 21c0 12.9 19 28.5 19 28.5S40 33.9 40 21C40 10.5 31.5 2 21 2Z" fill="url(#cctvPinGradient)" stroke="#fff" stroke-width="2.2"/>' +
-                    '<rect x="11" y="16" width="20" height="12.5" rx="3" fill="#eff6ff" stroke="#dbeafe" stroke-width="1.5"/>' +
-                    '<path d="M31 18.5l7-3.2v13.4l-7-3.4z" fill="#bfdbfe" stroke="#ffffff" stroke-width="1.2"/>' +
-                    '<circle cx="21" cy="22.5" r="5" fill="#0f172a"/>' +
-                    '<circle cx="21" cy="22.5" r="2.3" fill="#e0f2fe"/>' +
-                    '<circle cx="31" cy="17" r="2" fill="#fca5a5" stroke="#fff" stroke-width="1"/>' +
+                html: '<svg width="32" height="32" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" aria-label="CCTV">' +
+                    '<path d="M17 16l4-5 21 12-4 5z" fill="#171717"/>' +
+                    '<path d="M14 18l25 14-7 5-17-9c-3.5-2-4.4-5.9-1-10z" fill="#171717"/>' +
+                    '<path d="M36 30l6 3-5 5-6-3z" fill="#171717"/>' +
+                    '<circle cx="20" cy="28" r="3.2" fill="#ffffff" stroke="#171717" stroke-width="2"/>' +
+                    '<path d="M20 31l-4 8-7 1v2h9l5-10z" fill="#171717"/>' +
+                    '<path d="M8 37h4v10H8zM8 39h8v2H8z" fill="#171717"/>' +
                     '</svg>',
-                iconSize: [42, 52],
-                iconAnchor: [21, 50],
-                popupAnchor: [0, -44]
+                iconSize: [32, 32],
+                iconAnchor: [16, 16],
+                popupAnchor: [0, -20]
             });
             var detailUrl = '<?= base_url('cctv/show'); ?>/' + encodeURIComponent(camera.id);
-            var popup = '<strong>' + escapeMapHtml(camera.nama_camera || 'CCTV') + '</strong><br>' +
-                escapeMapHtml(camera.location || '-') + '<br>' +
-                '<small>Lat: ' + latitude.toFixed(8) + '<br>Lng: ' + longitude.toFixed(8) + '</small><br>' +
-                '<a class="btn btn-primary btn-sm mt-2" href="' + detailUrl + '">Lihat CCTV</a>';
+            var snapshotUrl = cctvSnapshotUrl + '/' + encodeURIComponent(camera.id) + '?t=' + Date.now();
+            var popup = '<div class="cctv-map-popup">' +
+                '<div class="font-weight-bold mb-1">' + escapeMapHtml(camera.nama_camera || 'CCTV') + '</div>' +
+                '<div class="small text-muted mb-2"><i class="fas fa-map-marker-alt mr-1"></i>' + escapeMapHtml(camera.location || '-') + '</div>' +
+                '<div class="small mb-2"><i class="fas fa-network-wired mr-1"></i><code>' + escapeMapHtml(camera.ip_address || '-') + '</code></div>' +
+                '<div class="cctv-map-popup-view" id="cctv-view-' + escapeMapHtml(camera.id) + '">' +
+                '<img class="cctv-live-image" src="' + snapshotUrl + '" alt="View CCTV ' + escapeMapHtml(camera.nama_camera || '') + '" onerror="this.alt=\'Snapshot CCTV tidak tersedia\';" />' +
+                '<button type="button" class="cctv-popup-fullscreen" title="Maximize view CCTV" aria-label="Maximize view CCTV" onclick="toggleCctvFullscreen(this)"><i class="fas fa-expand"></i></button>' +
+                '</div>' +
+                '<div class="mt-2 d-flex justify-content-between align-items-center">' +
+                '<small class="text-muted">Lat: ' + latitude.toFixed(6) + ', Lng: ' + longitude.toFixed(6) + '</small>' +
+                '<small class="cctv-live-status"><i class="fas fa-circle mr-1"></i>Live snapshot</small>' +
+                '<a class="btn btn-primary btn-sm ml-2" href="' + detailUrl + '"><i class="fas fa-video mr-1"></i>Detail</a>' +
+                '</div></div>';
 
-            L.marker([latitude, longitude], { icon: cameraIcon })
+            var marker = L.marker([latitude, longitude], { icon: cameraIcon })
                 .bindPopup(popup)
                 .bindTooltip(camera.nama_camera || 'CCTV')
                 .addTo(cctvMarkerLayer);
+
+            marker.on('popupopen', function (event) {
+                startCctvLiveSnapshot(event.popup.getElement(), camera.id);
+            });
+            marker.on('popupclose', function () {
+                stopCctvLiveSnapshot(camera.id);
+            });
         });
+    }
+
+    function startCctvLiveSnapshot(popupElement, cameraId) {
+        stopCctvLiveSnapshot(cameraId);
+
+        var image = popupElement.querySelector('.cctv-live-image');
+        if (!image) {
+            return;
+        }
+
+        var refresh = function () {
+            image.src = cctvSnapshotUrl + '/' + encodeURIComponent(cameraId) + '?t=' + Date.now();
+        };
+
+        cctvLiveTimers[cameraId] = window.setInterval(refresh, 2000);
+    }
+
+    function stopCctvLiveSnapshot(cameraId) {
+        if (cctvLiveTimers[cameraId]) {
+            window.clearInterval(cctvLiveTimers[cameraId]);
+            delete cctvLiveTimers[cameraId];
+        }
     }
 
     function escapeMapHtml(value) {
         return String(value).replace(/[&<>'"]/g, function (character) {
             return {'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;'}[character];
         });
+    }
+
+    function toggleCctvFullscreen(button) {
+        var view = button.parentElement;
+
+        if (document.fullscreenElement === view) {
+            document.exitFullscreen();
+            return;
+        }
+
+        if (view.requestFullscreen) {
+            view.requestFullscreen();
+        }
     }
 
     function renderMarkers() {
