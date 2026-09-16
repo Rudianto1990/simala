@@ -117,6 +117,7 @@
     var countdownText = document.getElementById('countdownText');
     var activeCamera = null;
     var countdownTimer = null;
+    var snapshotRefreshTimer = null;
     var webRtcBaseUrl = <?= json_encode(trim((string) env('CCTV_WEBRTC_BASE_URL', ''), '/')); ?>;
     var webRtcPathTemplate = <?= json_encode(trim((string) env('CCTV_WEBRTC_PATH_TEMPLATE', 'camera-{id}'), '/')); ?>;
 
@@ -129,6 +130,7 @@
 
     function showSnapshot() {
         clearInterval(countdownTimer);
+        clearInterval(snapshotRefreshTimer);
         modalFrame.style.display = 'none';
         snapshotImage.style.display = 'block';
         document.getElementById('snapshotBtn').classList.add('active');
@@ -144,11 +146,20 @@
                 countdownText.style.display = 'none';
             }
         }, 1000);
-        snapshotImage.src = '<?= base_url('cctv/snapshot'); ?>/' + activeCamera.cameraId + '?t=' + Date.now();
+        var refreshSnapshot = function () {
+            if (!activeCamera) {
+                return;
+            }
+
+            snapshotImage.src = '<?= base_url('cctv/snapshot'); ?>/' + activeCamera.cameraId + '?t=' + Date.now();
+        };
+
+        refreshSnapshot();
+        snapshotRefreshTimer = setInterval(refreshSnapshot, 2000);
         snapshotImage.onerror = function () {
             previewMessage.textContent = 'Snapshot gagal dimuat. Periksa sesi login dan izin akses kamera.';
         };
-        snapshotImage.onload = function () { previewMessage.textContent = ''; };
+        snapshotImage.onload = function () { previewMessage.textContent = 'Live snapshot aktif.'; };
     }
 
     document.getElementById('snapshotBtn').addEventListener('click', showSnapshot);
@@ -157,6 +168,7 @@
             previewMessage.textContent = 'Gateway WebRTC belum dikonfigurasi.';
             return;
         }
+        clearInterval(snapshotRefreshTimer);
         var path = webRtcPathTemplate.replace('{id}', activeCamera.cameraId);
         modalFrame.src = webRtcBaseUrl + '/' + path + '/?autoplay=true';
         modalFrame.style.display = 'block';
@@ -178,6 +190,7 @@
 
     previewModal.on('hidden.bs.modal', function () {
         clearInterval(countdownTimer);
+        clearInterval(snapshotRefreshTimer);
         modalFrame.src = '';
         snapshotImage.src = '';
         activeCamera = null;
