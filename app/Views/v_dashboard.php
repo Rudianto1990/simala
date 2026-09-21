@@ -10,8 +10,18 @@
     <div class="row">
         <div class="col">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Peta Monitoring Alat</h6>
+                <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
+                        <h6 class="m-0 font-weight-bold text-primary mr-3 mb-2 mb-sm-0">Peta Monitoring Alat</h6>
+                        <div class="btn-group shadow-sm" role="group" aria-label="Toggle Layout Peta">
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'baso' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutBaso" onclick="switchLayout('baso')">
+                                <i class="fas fa-layer-group mr-1"></i> Layout BASO
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'kalijapat' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutKalijapat" onclick="switchLayout('kalijapat')">
+                                <i class="fas fa-anchor mr-1"></i> Layout Dermaga Kalijapat
+                            </button>
+                        </div>
+                    </div>
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <span class="badge badge-pill" style="background:#d9534f; color:#fff; padding:6px 10px;">MBC</span>
                         <span class="badge badge-pill" style="background:#5cb85c; color:#fff; padding:6px 10px;">RTG</span>
@@ -165,7 +175,7 @@
 <script>
     var alatData = <?= json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     var cctvData = <?= json_encode($cctv ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-    var denahUrl = '<?= base_url('img/denah/denah.png'); ?>';
+    var denahUrl = '<?= base_url(($activeLayout ?? "baso") === "kalijapat" ? "img/denah/kalijapat.png" : "img/denah/denah.png"); ?>';
 
     function getCategoryKey(item) {
         var nama = (item.nama_alat || '').toUpperCase();
@@ -254,6 +264,26 @@
 
     new FullscreenControl().addTo(mymap);
 
+    var LayoutToggleControl = L.Control.extend({
+        options: {
+            position: 'topleft'
+        },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            container.style.backgroundColor = '#fff';
+            container.style.padding = '4px';
+            container.style.borderRadius = '4px';
+            container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+            container.innerHTML = '<div class="btn-group btn-group-toggle" role="group">' +
+                '<button type="button" class="btn btn-xs btn-primary font-weight-bold" id="mapBtnBaso" onclick="switchLayout(\'baso\')" style="font-size:11px; padding:3px 8px;">BASO</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnKalijapat" onclick="switchLayout(\'kalijapat\')" style="font-size:11px; padding:3px 8px;">Dermaga Kalijapat</button>' +
+                '</div>';
+            L.DomEvent.disableClickPropagation(container);
+            return container;
+        }
+    });
+    new LayoutToggleControl().addTo(mymap);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
@@ -261,12 +291,80 @@
 
     var imageWidth = 302;
     var imageHeight = 266;
-    var denahBounds = [[-6.129768, 106.855984], [-6.075779, 106.925468]];
+    var denahBounds = [[-6.129426629182171, 106.85606981646343], [-6.07543762918217, 106.92555381646342]];
     var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
         opacity: 0.82,
         interactive: true
     }).addTo(mymap);
-    mymap.setView([-6.103, 106.883], 14);
+    mymap.setView([-6.102432, 106.890812], 14);
+
+    var layoutConfigs = {
+        baso: {
+            center: [-6.102432, 106.890812],
+            zoom: 14,
+            showOverlay: true,
+            title: 'Layout BASO'
+        },
+        kalijapat: {
+            center: [-6.1135257, 106.8732619],
+            zoom: 16,
+            showOverlay: true,
+            title: 'Layout Dermaga Kalijapat'
+        }
+    };
+
+    var currentLayout = 'baso';
+
+    function switchLayout(layoutKey) {
+        if (!layoutConfigs[layoutKey]) return;
+        currentLayout = layoutKey;
+        var config = layoutConfigs[layoutKey];
+
+        mymap.flyTo(config.center, config.zoom, {
+            duration: 1.2
+        });
+
+        var btnBaso = document.getElementById('btnLayoutBaso');
+        var btnKalijapat = document.getElementById('btnLayoutKalijapat');
+        var mapBtnBaso = document.getElementById('mapBtnBaso');
+        var mapBtnKalijapat = document.getElementById('mapBtnKalijapat');
+
+        if (layoutKey === 'baso') {
+            if (btnBaso) {
+                btnBaso.classList.add('btn-primary', 'active');
+                btnBaso.classList.remove('btn-outline-primary');
+            }
+            if (btnKalijapat) {
+                btnKalijapat.classList.add('btn-outline-primary');
+                btnKalijapat.classList.remove('btn-primary', 'active');
+            }
+            if (mapBtnBaso) {
+                mapBtnBaso.classList.add('btn-primary', 'active');
+                mapBtnBaso.classList.remove('btn-outline-primary');
+            }
+            if (mapBtnKalijapat) {
+                mapBtnKalijapat.classList.add('btn-outline-primary');
+                mapBtnKalijapat.classList.remove('btn-primary', 'active');
+            }
+        } else {
+            if (btnKalijapat) {
+                btnKalijapat.classList.add('btn-primary', 'active');
+                btnKalijapat.classList.remove('btn-outline-primary');
+            }
+            if (btnBaso) {
+                btnBaso.classList.add('btn-outline-primary');
+                btnBaso.classList.remove('btn-primary', 'active');
+            }
+            if (mapBtnKalijapat) {
+                mapBtnKalijapat.classList.add('btn-primary', 'active');
+                mapBtnKalijapat.classList.remove('btn-outline-primary');
+            }
+            if (mapBtnBaso) {
+                mapBtnBaso.classList.add('btn-outline-primary');
+                mapBtnBaso.classList.remove('btn-primary', 'active');
+            }
+        }
+    }
 
     var dragState = null;
     var resizeState = null;
@@ -651,5 +749,78 @@
     renderMarkers();
     renderCctvMarkers();
     updateDenahSettingsInfo();
+
+    var currentLayout = '<?= $activeLayout ?? "baso"; ?>';
+
+    var layoutConfigs = {
+        baso: {
+            name: 'Layout BASO',
+            center: [-6.102432, 106.890812],
+            zoom: 14,
+            bounds: [[-6.129426629182171, 106.85606981646343], [-6.07543762918217, 106.92555381646342]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
+        },
+        kalijapat: {
+            name: 'Layout Dermaga Kalijapat',
+            center: [-6.1148, 106.8632],
+            zoom: 16,
+            bounds: [[-6.1265, 106.8540], [-6.1065, 106.8730]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        }
+    };
+
+    function switchLayout(layoutName) {
+        if (!layoutConfigs[layoutName]) return;
+        currentLayout = layoutName;
+        var config = layoutConfigs[layoutName];
+
+        mymap.flyTo(config.center, config.zoom, { duration: 1.2 });
+
+        denahBounds = config.bounds;
+        imageWidth = config.imageWidth;
+        imageHeight = config.imageHeight;
+
+        if (config.imageUrl && typeof denahOverlay.setUrl === 'function') {
+            denahOverlay.setUrl(config.imageUrl);
+        }
+        denahOverlay.setBounds(denahBounds);
+        resizeHandle.setLatLng(denahBounds[1]);
+
+        syncDenahInputs();
+        renderMarkers();
+        updateDenahSettingsInfo();
+
+        var btnBaso = document.getElementById('btnLayoutBaso');
+        var btnKalijapat = document.getElementById('btnLayoutKalijapat');
+        if (btnBaso && btnKalijapat) {
+            if (layoutName === 'baso') {
+                btnBaso.className = 'btn btn-sm btn-primary active';
+                btnKalijapat.className = 'btn btn-sm btn-outline-primary';
+            } else {
+                btnKalijapat.className = 'btn btn-sm btn-primary active';
+                btnBaso.className = 'btn btn-sm btn-outline-primary';
+            }
+        }
+
+        var mapBtnBaso = document.getElementById('mapBtnBaso');
+        var mapBtnKalijapat = document.getElementById('mapBtnKalijapat');
+        if (mapBtnBaso && mapBtnKalijapat) {
+            if (layoutName === 'baso') {
+                mapBtnBaso.className = 'btn btn-xs btn-primary font-weight-bold';
+                mapBtnKalijapat.className = 'btn btn-xs btn-outline-primary font-weight-bold';
+            } else {
+                mapBtnKalijapat.className = 'btn btn-xs btn-primary font-weight-bold';
+                mapBtnBaso.className = 'btn btn-xs btn-outline-primary font-weight-bold';
+            }
+        }
+    }
+
+    if (currentLayout === 'kalijapat') {
+        switchLayout('kalijapat');
+    }
 </script>
 <?= $this->endSection(); ?>

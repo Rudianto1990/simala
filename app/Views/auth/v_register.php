@@ -16,7 +16,7 @@
                                 <div class="text-center">
                                     <h1 class="h4 text-gray-900 mb-4">SIMALA - Monitoring Alat</h1>
                                 </div>
-                                <form action="/auth/prosesregis" method="POST" class="user">
+                                <form action="<?=base_url('auth/prosesregis');?>" method="POST" class="user">
                                 <div class="form-group">
                                         <input type="text" class="form-control form-control-user"
                                             placeholder="Nama Kamu..." name="nama">

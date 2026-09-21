@@ -18,7 +18,7 @@
                                 <?php if (session()->getFlashdata('pesan')) {
     echo session()->getFlashdata('pesan');}
 ;?>
-                                <form action="/auth/ceklogin" method="POST" class="user">
+                                <form action="<?=base_url('auth/ceklogin');?>" method="POST" class="user">
                                     <div class="form-group">
                                         <input type="email" class="form-control form-control-user"
                                             id="exampleInputEmail" aria-describedby="emailHelp"
@@ -33,7 +33,7 @@
                                 <hr>
 
                                 <div class="text-center">
-                                    <?=($data === 0 ? '<a class="small" href="/auth/register">Buat Akun</a>' : '');?>
+                                    <?=($data === 0 ? '<a class="small" href="'.base_url('auth/register').'">Buat Akun</a>' : '');?>
                                 </div>
                             </div>
                         </div>

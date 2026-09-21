@@ -18,6 +18,16 @@ class Dashboard extends BaseController
 
     public function index()
     {
+        return $this->renderDashboard('baso');
+    }
+
+    public function kalijapat()
+    {
+        return $this->renderDashboard('kalijapat');
+    }
+
+    private function renderDashboard($activeLayout = 'baso')
+    {
         $alat = $this->MonitoringAlatModel->getAlat();
         $cctv = $this->CctvModel->orderBy('id', 'DESC')->findAll();
 
@@ -57,13 +67,14 @@ class Dashboard extends BaseController
         $data = [
             'title' => 'Dashboard Monitoring Alat',
             'appname' => 'SIMALA',
-            'heading' => 'Dashboard',
+            'heading' => 'Dashboard Monitoring Alat',
             'data' => $alat,
             'mbc' => $mbc,
             'rtg' => $rtg,
             'ohc' => $ohc,
             'sltl' => $sltl,
             'cctv' => $cctv,
+            'activeLayout' => $activeLayout,
         ];
 
         return view('v_dashboard', $data);

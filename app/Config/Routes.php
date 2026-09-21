@@ -15,6 +15,7 @@ $routes->group('auth', static function ($routes) {
 });
 
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'ceklogin']);
+$routes->get('dashboard/kalijapat', 'Dashboard::kalijapat', ['filter' => 'ceklogin']);
 
 $routes->group('cctv', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Cctv::index');
