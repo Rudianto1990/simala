@@ -15,10 +15,19 @@
                         <h6 class="m-0 font-weight-bold text-primary mr-3 mb-2 mb-sm-0">Peta Monitoring Alat</h6>
                         <div class="btn-group shadow-sm" role="group" aria-label="Toggle Layout Peta">
                             <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'baso' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutBaso" onclick="switchLayout('baso')">
-                                <i class="fas fa-layer-group mr-1"></i> Layout BASO
+                                <i class="fas fa-layer-group mr-1"></i> BASO
                             </button>
                             <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'kalijapat' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutKalijapat" onclick="switchLayout('kalijapat')">
-                                <i class="fas fa-anchor mr-1"></i> Layout Dermaga Kalijapat
+                                <i class="fas fa-anchor mr-1"></i> Dermaga Kalijapat
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_a' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaA" onclick="switchLayout('dermaga_a')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga A
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_b' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaB" onclick="switchLayout('dermaga_b')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga B
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_c' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaC" onclick="switchLayout('dermaga_c')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga C
                             </button>
                         </div>
                     </div>
@@ -277,6 +286,9 @@
             container.innerHTML = '<div class="btn-group btn-group-toggle" role="group">' +
                 '<button type="button" class="btn btn-xs btn-primary font-weight-bold" id="mapBtnBaso" onclick="switchLayout(\'baso\')" style="font-size:11px; padding:3px 8px;">BASO</button>' +
                 '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnKalijapat" onclick="switchLayout(\'kalijapat\')" style="font-size:11px; padding:3px 8px;">Dermaga Kalijapat</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaA" onclick="switchLayout(\'dermaga_a\')" style="font-size:11px; padding:3px 8px;">Dermaga A</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaB" onclick="switchLayout(\'dermaga_b\')" style="font-size:11px; padding:3px 8px;">Dermaga B</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaC" onclick="switchLayout(\'dermaga_c\')" style="font-size:11px; padding:3px 8px;">Dermaga C</button>' +
                 '</div>';
             L.DomEvent.disableClickPropagation(container);
             return container;
@@ -298,73 +310,6 @@
     }).addTo(mymap);
     mymap.setView([-6.102432, 106.890812], 14);
 
-    var layoutConfigs = {
-        baso: {
-            center: [-6.102432, 106.890812],
-            zoom: 14,
-            showOverlay: true,
-            title: 'Layout BASO'
-        },
-        kalijapat: {
-            center: [-6.1135257, 106.8732619],
-            zoom: 16,
-            showOverlay: true,
-            title: 'Layout Dermaga Kalijapat'
-        }
-    };
-
-    var currentLayout = 'baso';
-
-    function switchLayout(layoutKey) {
-        if (!layoutConfigs[layoutKey]) return;
-        currentLayout = layoutKey;
-        var config = layoutConfigs[layoutKey];
-
-        mymap.flyTo(config.center, config.zoom, {
-            duration: 1.2
-        });
-
-        var btnBaso = document.getElementById('btnLayoutBaso');
-        var btnKalijapat = document.getElementById('btnLayoutKalijapat');
-        var mapBtnBaso = document.getElementById('mapBtnBaso');
-        var mapBtnKalijapat = document.getElementById('mapBtnKalijapat');
-
-        if (layoutKey === 'baso') {
-            if (btnBaso) {
-                btnBaso.classList.add('btn-primary', 'active');
-                btnBaso.classList.remove('btn-outline-primary');
-            }
-            if (btnKalijapat) {
-                btnKalijapat.classList.add('btn-outline-primary');
-                btnKalijapat.classList.remove('btn-primary', 'active');
-            }
-            if (mapBtnBaso) {
-                mapBtnBaso.classList.add('btn-primary', 'active');
-                mapBtnBaso.classList.remove('btn-outline-primary');
-            }
-            if (mapBtnKalijapat) {
-                mapBtnKalijapat.classList.add('btn-outline-primary');
-                mapBtnKalijapat.classList.remove('btn-primary', 'active');
-            }
-        } else {
-            if (btnKalijapat) {
-                btnKalijapat.classList.add('btn-primary', 'active');
-                btnKalijapat.classList.remove('btn-outline-primary');
-            }
-            if (btnBaso) {
-                btnBaso.classList.add('btn-outline-primary');
-                btnBaso.classList.remove('btn-primary', 'active');
-            }
-            if (mapBtnKalijapat) {
-                mapBtnKalijapat.classList.add('btn-primary', 'active');
-                mapBtnKalijapat.classList.remove('btn-outline-primary');
-            }
-            if (mapBtnBaso) {
-                mapBtnBaso.classList.add('btn-outline-primary');
-                mapBtnBaso.classList.remove('btn-primary', 'active');
-            }
-        }
-    }
 
     var dragState = null;
     var resizeState = null;
@@ -770,6 +715,33 @@
             imageWidth: 302,
             imageHeight: 266,
             imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_a: {
+            name: 'Layout Dermaga A',
+            center: [-6.1085, 106.8785],
+            zoom: 16,
+            bounds: [[-6.1200, 106.8690], [-6.1000, 106.8880]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_b: {
+            name: 'Layout Dermaga B',
+            center: [-6.1040, 106.8845],
+            zoom: 16,
+            bounds: [[-6.1155, 106.8750], [-6.0955, 106.8940]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_c: {
+            name: 'Layout Dermaga C',
+            center: [-6.0995, 106.8910],
+            zoom: 16,
+            bounds: [[-6.1110, 106.8815], [-6.0910, 106.9005]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
         }
     };
 
@@ -794,33 +766,30 @@
         renderMarkers();
         updateDenahSettingsInfo();
 
-        var btnBaso = document.getElementById('btnLayoutBaso');
-        var btnKalijapat = document.getElementById('btnLayoutKalijapat');
-        if (btnBaso && btnKalijapat) {
-            if (layoutName === 'baso') {
-                btnBaso.className = 'btn btn-sm btn-primary active';
-                btnKalijapat.className = 'btn btn-sm btn-outline-primary';
-            } else {
-                btnKalijapat.className = 'btn btn-sm btn-primary active';
-                btnBaso.className = 'btn btn-sm btn-outline-primary';
-            }
-        }
+        var layoutKeys = ['baso', 'kalijapat', 'dermaga_a', 'dermaga_b', 'dermaga_c'];
+        var idSuffixes = {
+            baso: 'Baso',
+            kalijapat: 'Kalijapat',
+            dermaga_a: 'DermagaA',
+            dermaga_b: 'DermagaB',
+            dermaga_c: 'DermagaC'
+        };
 
-        var mapBtnBaso = document.getElementById('mapBtnBaso');
-        var mapBtnKalijapat = document.getElementById('mapBtnKalijapat');
-        if (mapBtnBaso && mapBtnKalijapat) {
-            if (layoutName === 'baso') {
-                mapBtnBaso.className = 'btn btn-xs btn-primary font-weight-bold';
-                mapBtnKalijapat.className = 'btn btn-xs btn-outline-primary font-weight-bold';
-            } else {
-                mapBtnKalijapat.className = 'btn btn-xs btn-primary font-weight-bold';
-                mapBtnBaso.className = 'btn btn-xs btn-outline-primary font-weight-bold';
+        layoutKeys.forEach(function(k) {
+            var s = idSuffixes[k];
+            var btn = document.getElementById('btnLayout' + s);
+            var mapBtn = document.getElementById('mapBtn' + s);
+            if (btn) {
+                btn.className = (k === layoutName) ? 'btn btn-sm btn-primary active' : 'btn btn-sm btn-outline-primary';
             }
-        }
+            if (mapBtn) {
+                mapBtn.className = (k === layoutName) ? 'btn btn-xs btn-primary font-weight-bold' : 'btn btn-xs btn-outline-primary font-weight-bold';
+            }
+        });
     }
 
-    if (currentLayout === 'kalijapat') {
-        switchLayout('kalijapat');
+    if (layoutConfigs[currentLayout]) {
+        switchLayout(currentLayout);
     }
 </script>
 <?= $this->endSection(); ?>

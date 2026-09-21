@@ -26,6 +26,21 @@ class Dashboard extends BaseController
         return $this->renderDashboard('kalijapat');
     }
 
+    public function dermaga_a()
+    {
+        return $this->renderDashboard('dermaga_a');
+    }
+
+    public function dermaga_b()
+    {
+        return $this->renderDashboard('dermaga_b');
+    }
+
+    public function dermaga_c()
+    {
+        return $this->renderDashboard('dermaga_c');
+    }
+
     private function renderDashboard($activeLayout = 'baso')
     {
         $alat = $this->MonitoringAlatModel->getAlat();

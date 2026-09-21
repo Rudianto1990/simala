@@ -16,6 +16,9 @@ $routes->group('auth', static function ($routes) {
 
 $routes->get('dashboard', 'Dashboard::index', ['filter' => 'ceklogin']);
 $routes->get('dashboard/kalijapat', 'Dashboard::kalijapat', ['filter' => 'ceklogin']);
+$routes->get('dashboard/dermaga_a', 'Dashboard::dermaga_a', ['filter' => 'ceklogin']);
+$routes->get('dashboard/dermaga_b', 'Dashboard::dermaga_b', ['filter' => 'ceklogin']);
+$routes->get('dashboard/dermaga_c', 'Dashboard::dermaga_c', ['filter' => 'ceklogin']);
 
 $routes->group('cctv', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Cctv::index');
