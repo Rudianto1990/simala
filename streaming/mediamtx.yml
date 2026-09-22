@@ -3,4 +3,1459 @@ logLevel: info
 hls: yes
 hlsAddress: :8888
 
+webrtc: yes
+webrtcAddress: :8889
+
 paths:
+  camera-1:
+    source: 'rtsp://user:user@10.200.22.24:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-2:
+    source: 'rtsp://user:user@10.200.22.25:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-3:
+    source: 'rtsp://user:user@10.200.22.26:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-4:
+    source: 'rtsp://user:user@10.200.22.27:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-5:
+    source: 'rtsp://10.200.22.28:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-6:
+    source: 'rtsp://user:user1234@10.200.21.29/stream1'
+    rtspTransport: tcp
+
+  camera-7:
+    source: 'rtsp://user:cabang1234@10.200.22.30:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-8:
+    source: 'rtsp://user:cabang1234@10.200.20.32:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-9:
+    source: 'rtsp://user:cabang1234@10.200.20.34:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-10:
+    source: 'rtsp://user:cabang1234@10.200.22.33:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-11:
+    source: 'rtsp://user:cabang1234@10.200.22.34:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-12:
+    source: 'rtsp://user:cabang1234@10.200.22.35:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-13:
+    source: 'rtsp://user:cabang2025@10.200.22.36:554/ISAPI/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-16:
+    source: 'rtsp://user:cabang1234@10.201.52.68:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-17:
+    source: 'rtsp://user:cabang1234@10.201.52.69:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-18:
+    source: 'rtsp://user:cabang1234@10.201.52.70:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-19:
+    source: 'rtsp://user:cabang1234@10.201.52.71:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-20:
+    source: 'rtsp://user:user1234@10.201.52.72:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-21:
+    source: 'rtsp://user:user1234@10.201.52.73:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-22:
+    source: 'rtsp://user:user1234@10.201.52.74:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-23:
+    source: 'rtsp://user:user1234@10.201.52.75:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-24:
+    source: 'rtsp://user:user1234@10.201.52.76:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-25:
+    source: 'rtsp://user:user1234@10.201.52.77:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-26:
+    source: 'rtsp://user:user1234@10.201.52.78:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-27:
+    source: 'rtsp://user:user1234@10.201.52.79:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-28:
+    source: 'rtsp://user:user1234@10.201.52.80:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-29:
+    source: 'rtsp://user:user1234@10.201.52.81:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-30:
+    source: 'rtsp://user:cabang1234@10.200.22.205:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-31:
+    source: 'rtsp://user:user1234@10.201.52.83:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-32:
+    source: 'rtsp://user:user1234@10.201.52.84:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-33:
+    source: 'rtsp://user:user1234@10.201.52.85:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-34:
+    source: 'rtsp://user:user1234@10.201.52.86:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-35:
+    source: 'rtsp://user:user1234@10.201.52.87:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-37:
+    source: 'rtsp://user:user1234@10.200.22.60:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-38:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.61:554/rtsp_tunnel'
+    rtspTransport: tcp
+
+  camera-39:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.62:554/stream1'
+    rtspTransport: tcp
+
+  camera-41:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.64:554/stream1'
+    rtspTransport: tcp
+
+  camera-42:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.65:554/stream1'
+    rtspTransport: tcp
+
+  camera-43:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.66:554/stream1'
+    rtspTransport: tcp
+
+  camera-44:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.67:554/stream1'
+    rtspTransport: tcp
+
+  camera-45:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.68:554/stream1'
+    rtspTransport: tcp
+
+  camera-46:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.69:554/stream1'
+    rtspTransport: tcp
+
+  camera-48:
+    source: 'rtsp://admin:multimedia2020@10.200.22.71/streaming'
+    rtspTransport: tcp
+
+  camera-51:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.73:554/stream1'
+    rtspTransport: tcp
+
+  camera-52:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.74:554/stream1'
+    rtspTransport: tcp
+
+  camera-53:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.75:554/stream1'
+    rtspTransport: tcp
+
+  camera-54:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.76:554/stream1'
+    rtspTransport: tcp
+
+  camera-56:
+    source: 'rtsp://user:cabang1234@10.200.22.78:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-57:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.79:554/stream1'
+    rtspTransport: tcp
+
+  camera-58:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.80:554/stream1'
+    rtspTransport: tcp
+
+  camera-59:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.81:554/Streaming/Channels/1'
+    rtspTransport: tcp
+
+  camera-60:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.82:554/stream1'
+    rtspTransport: tcp
+
+  camera-61:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.83:554/stream1'
+    rtspTransport: tcp
+
+  camera-62:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.84:554/stream1'
+    rtspTransport: tcp
+
+  camera-63:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.85:554/stream1'
+    rtspTransport: tcp
+
+  camera-64:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.86:554/stream1'
+    rtspTransport: tcp
+
+  camera-65:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.87:554/stream1'
+    rtspTransport: tcp
+
+  camera-67:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.89:554/stream1'
+    rtspTransport: tcp
+
+  camera-68:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.90:554/stream1'
+    rtspTransport: tcp
+
+  camera-69:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.91:554/stream1'
+    rtspTransport: tcp
+
+  camera-70:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.92:554/stream1'
+    rtspTransport: tcp
+
+  camera-71:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.93:554/stream1'
+    rtspTransport: tcp
+
+  camera-72:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.94:554/stream1'
+    rtspTransport: tcp
+
+  camera-73:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.95:554/stream1'
+    rtspTransport: tcp
+
+  camera-74:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.96:554/stream1'
+    rtspTransport: tcp
+
+  camera-75:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.97:554/stream1'
+    rtspTransport: tcp
+
+  camera-76:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.98:554/stream1'
+    rtspTransport: tcp
+
+  camera-77:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.99:554/stream1'
+    rtspTransport: tcp
+
+  camera-78:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.100:554/stream1'
+    rtspTransport: tcp
+
+  camera-79:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.101:554/stream1'
+    rtspTransport: tcp
+
+  camera-80:
+    source: 'rtsp://user:cabang1234@10.200.22.102:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-81:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.103:554/stream1'
+    rtspTransport: tcp
+
+  camera-82:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.104:554/stream1'
+    rtspTransport: tcp
+
+  camera-83:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.105:554/stream1'
+    rtspTransport: tcp
+
+  camera-84:
+    source: 'rtsp://user:cabang1234@10.200.22.106:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-85:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.107:554/stream1'
+    rtspTransport: tcp
+
+  camera-86:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.108:554/stream1'
+    rtspTransport: tcp
+
+  camera-87:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.109:554/stream1'
+    rtspTransport: tcp
+
+  camera-88:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.110:554/stream1'
+    rtspTransport: tcp
+
+  camera-89:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.111:554/stream1'
+    rtspTransport: tcp
+
+  camera-90:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.112:554/stream1'
+    rtspTransport: tcp
+
+  camera-91:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.113:554/stream1'
+    rtspTransport: tcp
+
+  camera-92:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.114:554/stream1'
+    rtspTransport: tcp
+
+  camera-93:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.115:554/stream1'
+    rtspTransport: tcp
+
+  camera-94:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.118:554/stream1'
+    rtspTransport: tcp
+
+  camera-95:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.117:554/stream1'
+    rtspTransport: tcp
+
+  camera-97:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.119:554/stream1'
+    rtspTransport: tcp
+
+  camera-98:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.120:554/stream1'
+    rtspTransport: tcp
+
+  camera-99:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.121:554/stream1'
+    rtspTransport: tcp
+
+  camera-103:
+    source: 'rtsp://user:cabang1234@10.200.22.203:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-104:
+    source: 'rtsp://user:cabang1234@10.200.22.204:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-105:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.125:554/stream1'
+    rtspTransport: tcp
+
+  camera-106:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.126:554/rtsp_tu'
+    rtspTransport: tcp
+
+  camera-107:
+    source: 'rtsp://user:cabang1234@10.200.22.18:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-108:
+    source: 'rtsp://user:cabang1234@10.200.22.19:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-109:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.127:554/stream1'
+    rtspTransport: tcp
+
+  camera-110:
+    source: 'rtsp://user:user1234@10.200.22.142:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-111:
+    source: 'rtsp://user:user1234@10.200.22.143:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-112:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.128:554/rtsp_tunnel'
+    rtspTransport: tcp
+
+  camera-113:
+    source: 'rtsp://user:user1234@10.200.22.129:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-114:
+    source: 'rtsp://user:user1234@10.200.22.130:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-115:
+    source: 'rtsp://user:user1234@10.200.22.151:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-116:
+    source: 'rtsp://user:user1234@10.200.22.152:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-117:
+    source: 'rtsp://user:user1234@10.200.22.159:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-118:
+    source: 'rtsp://user:cabang1234@10.200.22.194:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-119:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.131:554/rtsp_tunnel'
+    rtspTransport: tcp
+
+  camera-120:
+    source: 'rtsp://user:user1234@10.200.22.170:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-121:
+    source: 'rtsp://user:user1234@10.200.22.171:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-122:
+    source: 'rtsp://user:user1234@10.200.22.169:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-123:
+    source: 'rtsp://user:user1234@10.200.22.141:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-124:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.132:554/rtsp_tunnel'
+    rtspTransport: tcp
+
+  camera-125:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.133:554/rtsp_tunnel'
+    rtspTransport: tcp
+
+  camera-126:
+    source: 'rtsp://service:WSS4Bosch@10.200.22.134:554/snap.jpg'
+    rtspTransport: tcp
+
+  camera-127:
+    source: 'rtsp://user:cabang1234@10.200.22.21:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-128:
+    source: 'rtsp://user:user1234@10.200.22.160:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-129:
+    source: 'rtsp://user:user1234@10.200.22.135/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-130:
+    source: 'rtsp://user:cabang1234@10.200.22.136:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-131:
+    source: 'rtsp://user:cabang1234@10.200.22.137:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-132:
+    source: 'rtsp://user:user1234@10.200.22.138:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-133:
+    source: 'rtsp://user:cabang1234@10.200.22.140:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-134:
+    source: 'rtsp://user:user1234@10.200.22.139:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-135:
+    source: 'rtsp://user:user1234@10.200.22.144:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-137:
+    source: 'rtsp://user:cabang1234@10.200.22.146:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-138:
+    source: 'rtsp://user:cabang1234@10.200.22.147:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-139:
+    source: 'rtsp://user:cabang1234@10.200.22.148:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-140:
+    source: 'rtsp://user:cabang1234@10.201.52.191:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-141:
+    source: 'rtsp://user:multimedia2024@10.200.22.192:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-142:
+    source: 'rtsp://user:cabang1234@10.201.52.193:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-143:
+    source: 'rtsp://user:cabang1234@10.201.52.194:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-144:
+    source: 'rtsp://user:cabang1234@10.200.22.157:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-145:
+    source: 'rtsp://user:user1234@10.200.22.145:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-146:
+    source: 'rtsp://user:user1234@10.201.54.12:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-147:
+    source: 'rtsp://user:user1234@10.201.54.12:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-148:
+    source: 'rtsp://user:cabang2025@10.201.54.210:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-149:
+    source: 'rtsp://user:cabang1234@10.201.54.13:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-150:
+    source: 'rtsp://user:cabang1234@10.201.54.15:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-151:
+    source: 'rtsp://user:cabang1234@10.201.18.20:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-152:
+    source: 'rtsp://user:user1234@10.200.21.36:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-153:
+    source: 'rtsp://user:cabang1234@10.201.54.16:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-154:
+    source: 'rtsp://user:cabang1234@10.200.54.19:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-155:
+    source: 'rtsp://user:cabang1234@10.201.54.20:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-156:
+    source: 'rtsp://user:user1234@10.201.54.21:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-157:
+    source: 'rtsp://user:user1234@0.201.54.22:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-158:
+    source: 'rtsp://user:user1234@10.201.54.23:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-159:
+    source: 'rtsp://user:user1234@10.201.54.24:554/Sreaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-160:
+    source: 'rtsp://user:user1234@10.201.54.25:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-161:
+    source: 'rtsp://user:cabang1234@10.201.54.26:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-162:
+    source: 'rtsp://user:cabang1234@10.201.54.27:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-163:
+    source: 'rtsp://user:user1234@10.201.54.28:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-164:
+    source: 'rtsp://user:cabang1234@10.201.54.33:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-165:
+    source: 'rtsp://user:cabang1234@10.201.54.30:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-167:
+    source: 'rtsp://user:cabang1234@10.201.54.31:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-168:
+    source: 'rtsp://user:cabang1234@10.201.54.255:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-169:
+    source: 'rtsp://user:cabang1234@10.201.54.34:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-170:
+    source: 'rtsp://user:user1234@10.201.54.194:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-171:
+    source: 'rtsp://user:user1234@10.201.54.195:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-172:
+    source: 'rtsp://user:user1234@10.201.54.196:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-173:
+    source: 'rtsp://user:user1234@10.201.54.35:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-174:
+    source: 'rtsp://user:user1234@10.200.21.61:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-175:
+    source: 'rtsp://user:cabang1234@10.200.21.79:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-176:
+    source: 'rtsp://user:cabang%402025@10.200.21.64:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-177:
+    source: 'rtsp://user:user1234@10.201.54.39:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-178:
+    source: 'rtsp://user:user1234@10.200.17.67:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-179:
+    source: 'rtsp://user:cabang1234@10.200.21.66:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-180:
+    source: 'rtsp://user:cabang1234@10.200.21.67:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-182:
+    source: 'rtsp://user:cabang1234@10.200.21.69:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-183:
+    source: 'rtsp://user:user1234@10.200.21.70:554/Streaming/Ch'
+    rtspTransport: tcp
+
+  camera-184:
+    source: 'rtsp://user:cabang1234@10.200.21.71:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-185:
+    source: 'rtsp://user:user1234@10.200.21.72:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-186:
+    source: 'rtsp://user:user1234@10.200.21.73:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-187:
+    source: 'rtsp://user:cabang1234@10.200.17.245:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-189:
+    source: 'rtsp://user:cabang1234@10.200.21.76:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-190:
+    source: 'rtsp://user:cabang1234@10.200.21.77:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-191:
+    source: 'rtsp://user:user1234@10.200.21.78:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-192:
+    source: 'rtsp://user:cabang1234@10.200.21.62:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-193:
+    source: 'rtsp://user:user1234@10.200.21.80:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-194:
+    source: 'rtsp://user:user1234@10.200.21.60:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-195:
+    source: 'rtsp://user:cabang1234@10.200.21.61:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-196:
+    source: 'rtsp://user:cabang1234@10.200.17.241:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-197:
+    source: 'rtsp://user:cabang1234@10.200.21.171:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-198:
+    source: 'rtsp://user:user1234@10.200.21.172:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-199:
+    source: 'rtsp://user:cabang1234@10.200.21.173:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-200:
+    source: 'rtsp://user:cabang1234@10.200.21.174:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-201:
+    source: 'rtsp://user:cabang1234@10.200.17.240:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-202:
+    source: 'rtsp://user:cabang1234@10.200.21.177:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-203:
+    source: 'rtsp://user:cabang1234@10.200.21.175:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-204:
+    source: 'rtsp://user:cabang1234@10.200.20.252:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-205:
+    source: 'rtsp://user:cabang1234@10.200.21.228:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-206:
+    source: 'rtsp://user:cabang1234@10.200.21.149:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-207:
+    source: 'rtsp://user:cabang1234@10.200.21.146:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-208:
+    source: 'rtsp://user:cabang1234@10.200.21.147:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-209:
+    source: 'rtsp://user:cabang1234@10.200.21.145:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-210:
+    source: 'rtsp://user:cabang1234@10.200.21.148:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-211:
+    source: 'rtsp://user:cabang@2025@10.201.54.181:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-212:
+    source: 'rtsp://user:Cabang%402025@10.201.54.185:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-213:
+    source: 'rtsp://user:Cabang%402025@10.201.54.186:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-214:
+    source: 'rtsp://datin:cabang1234@10.201.54.187:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-215:
+    source: 'rtsp://user:Cabang%402025@10.201.54.188:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-216:
+    source: 'rtsp://user:Cabang1234@10.201.54.189:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-217:
+    source: 'rtsp://user:Cabang%402025@10.201.54.190:554/Stream'
+    rtspTransport: tcp
+
+  camera-218:
+    source: 'rtsp://user:Cabang%402025@10.201.54.191:554/Stream'
+    rtspTransport: tcp
+
+  camera-220:
+    source: 'rtsp://user:Cabang%402025@10.201.54.193:554/Stream'
+    rtspTransport: tcp
+
+  camera-227:
+    source: 'rtsp://user:user1234@10.201.52.204:554/streaming/channels/1'
+    rtspTransport: tcp
+
+  camera-229:
+    source: 'rtsp://user:multimedia2018@10.201.52.206:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-231:
+    source: 'rtsp://user:cabang1234@10.201.52.208:554/Streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-233:
+    source: 'rtsp://user:cabang1234@10.201.52.230:554/Streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-235:
+    source: 'rtsp://user:cabang1234@10.201.52.212:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-236:
+    source: 'rtsp://user:multimedia2018@10.201.52.213:554/Strea'
+    rtspTransport: tcp
+
+  camera-237:
+    source: 'rtsp://user:multimedia2018@10.201.52.214:554/Strea'
+    rtspTransport: tcp
+
+  camera-238:
+    source: 'rtsp://user:cabang1234@10.201.52.215:554/Streaming'
+    rtspTransport: tcp
+
+  camera-239:
+    source: 'rtsp://user:user1234@10.201.52.216:554/Streaming/C'
+    rtspTransport: tcp
+
+  camera-240:
+    source: 'rtsp://user:cabang1234@10.201.52.217:554/Streaming'
+    rtspTransport: tcp
+
+  camera-241:
+    source: 'rtsp://user:cabang1234@10.201.52.218:554/Streaming'
+    rtspTransport: tcp
+
+  camera-242:
+    source: 'rtsp://user:cabang%402025@10.201.52.219:554/Stream'
+    rtspTransport: tcp
+
+  camera-243:
+    source: 'rtsp://user:cabang1234@10.201.52.220:554/Streaming'
+    rtspTransport: tcp
+
+  camera-244:
+    source: 'rtsp://user:cabang1234@10.201.52.221:554/Streaming'
+    rtspTransport: tcp
+
+  camera-245:
+    source: 'rtsp://user:cabang1234@10.201.52.222:554/Streaming'
+    rtspTransport: tcp
+
+  camera-246:
+    source: 'rtsp://user:cabang1234@10.201.52.223:554/Streaming'
+    rtspTransport: tcp
+
+  camera-247:
+    source: 'rtsp://user:cabang1234@10.201.52.224:554/Streaming'
+    rtspTransport: tcp
+
+  camera-248:
+    source: 'rtsp://user:cabang1234@10.201.52.229:554/Streaming'
+    rtspTransport: tcp
+
+  camera-251:
+    source: 'rtsp://user:cabang%402025@10.201.52.228/Streaming/'
+    rtspTransport: tcp
+
+  camera-253:
+    source: 'rtsp://user:cabang1234@10.201.52.230:554/Streaming'
+    rtspTransport: tcp
+
+  camera-254:
+    source: 'rtsp://user:cabang1234@10.201.52.231:554/Streaming'
+    rtspTransport: tcp
+
+  camera-255:
+    source: 'rtsp://user:cabang1234@10.201.52.232:554/Streaming'
+    rtspTransport: tcp
+
+  camera-256:
+    source: 'rtsp://user:cabang1234@10.201.52.233:554/Streaming'
+    rtspTransport: tcp
+
+  camera-257:
+    source: 'rtsp://user:cabang1234@10.201.52.234:554/sStreamin'
+    rtspTransport: tcp
+
+  camera-258:
+    source: 'rtsp://user:cabang1234@10.201.52.235:554/Streaming'
+    rtspTransport: tcp
+
+  camera-259:
+    source: 'rtsp://user:cabang1234@10.201.52.236:554/Streaming'
+    rtspTransport: tcp
+
+  camera-260:
+    source: 'rtsp://user:cabang1234@10.201.52.237:554/Streaming'
+    rtspTransport: tcp
+
+  camera-261:
+    source: 'rtsp://user:cabang1234@10.201.52.238:554/Streaming'
+    rtspTransport: tcp
+
+  camera-262:
+    source: 'rtsp://user:cabang1234@10.201.52.198:554/Streaming'
+    rtspTransport: tcp
+
+  camera-266:
+    source: 'rtsp://admin:C%40b%40ng2025@10.200.21.59:554/ISAPI/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-267:
+    source: 'rtsp://user:cabang1234@10.200.17.95:554/streaming/channels/1/picture'
+    rtspTransport: tcp
+
+  camera-268:
+    source: 'rtsp://user:cabang1234@10.200.21.103:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-269:
+    source: 'rtsp://user:user1234@10.200.21.104:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-270:
+    source: 'rtsp://user:cabang2025@10.200.21.105:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-271:
+    source: 'rtsp://user:cabang234@10.200.21.106:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-272:
+    source: 'rtsp://user:cabang1234@10.201.54.84:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-273:
+    source: 'rtsp://user:cabang1234@10.200.21.108:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-274:
+    source: 'rtsp://user:cabang1234@10.200.22.193:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-275:
+    source: 'rtsp://user:cabang1234@10.200.22.196:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-276:
+    source: 'rtsp://user:cabang%402025@10.200.21.216:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-277:
+    source: 'rtsp://datin:cabang1234@10.200.21.114:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-278:
+    source: 'rtsp://user:cabang1234@10.200.21.116:554/ISAPI/streaming/channels/1/picture'
+    rtspTransport: tcp
+
+  camera-279:
+    source: 'rtsp://user:cabang1234@10.200.22.195:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-280:
+    source: 'rtsp://user:cabang1234@10.200.21.118:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-281:
+    source: 'rtsp://user:cabang1234@10.200.21.119:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-282:
+    source: 'rtsp://user:cabang2026@10.200.20.120:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-283:
+    source: 'rtsp://user:cabang1234@10.200.20.121:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-284:
+    source: 'rtsp://user:cabang%402025@10.200.21.122:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-285:
+    source: 'rtsp://user:cabang1234@10.200.21.123:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-287:
+    source: 'rtsp://user:cabang1234@10.200.21.136:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-288:
+    source: 'rtsp://user:cabang2026@10.200.21.178:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-289:
+    source: 'rtsp://user:cabang%402025@10.200.21.176:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-290:
+    source: 'rtsp://user:Cabang%402025@10.200.21.204:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-292:
+    source: 'rtsp://user:cabang1234@10.200.21.165:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-294:
+    source: 'rtsp://user:cabang1234@10.200.21.203:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-295:
+    source: 'rtsp://user:cabang1234@10.200.21.150:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-296:
+    source: 'rtsp://user:user1234@10.200.21.151:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-297:
+    source: 'rtsp://user:cabang1234@10.200.21.152:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-298:
+    source: 'rtsp://user:user1234@10.200.21.153:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-300:
+    source: 'rtsp://user:cabang1234@10.200.21.155:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-301:
+    source: 'rtsp://user:user1234@10.200.21.156:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-302:
+    source: 'rtsp://user:user1234@10.200.21.157:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-303:
+    source: 'rtsp://user:user1234@10.200.21.158:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-304:
+    source: 'rtsp://user:user1234@10.200.21.159:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-305:
+    source: 'rtsp://user:user1234@10.200.21.160:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-306:
+    source: 'rtsp://user:user1234@10.200.21.161:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-307:
+    source: 'rtsp://user:user1234@10.200.21.162:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-308:
+    source: 'rtsp://user:user1234@10.200.21.163:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-309:
+    source: 'rtsp://user:user1234@10.200.22.173:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-311:
+    source: 'rtsp://user:user1234@10.200.22.150:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-312:
+    source: 'rtsp://user:cabang1234@10.200.21.181:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-313:
+    source: 'rtsp://user:cabang1234@10.200.21.182:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-314:
+    source: 'rtsp://user:cabang1234@10.200.21.183:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-315:
+    source: 'rtsp://user:cabang1234@10.200.21.184:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-316:
+    source: 'rtsp://user:cabang1234@10.200.21.185:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-317:
+    source: 'rtsp://user:cabang1234@10.200.21.186:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-319:
+    source: 'rtsp://user:cabang1234@10.200.21.188:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-320:
+    source: 'rtsp://user:user1234@10.200.22.200:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-321:
+    source: 'rtsp://user:Cabang%402025@10.200.21.139:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-323:
+    source: 'rtsp://user:user1234@10.200.21.141:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-324:
+    source: 'rtsp://user:cabang1234@10.200.21.144:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-326:
+    source: 'rtsp://user:cabang%402025@10.200.21.143:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-327:
+    source: 'rtsp://user:user1234@10.200.21.126:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-328:
+    source: 'rtsp://user:user1234@10.200.21.127:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-329:
+    source: 'rtsp://user:user1234@10.200.21.128:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-330:
+    source: 'rtsp://user:cabang2025@10.200.21.131:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-331:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.142:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-334:
+    source: 'rtsp://user:user1234@10.200.21.111:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-335:
+    source: 'rtsp://user:cabang1234@10.200.21.164:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-336:
+    source: 'rtsp://user:cabang1234@10.200.21.164:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-337:
+    source: 'rtsp://user:cabang1234@10.200.21.166:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-338:
+    source: 'rtsp://user:cabang1234@10.200.21.167:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-339:
+    source: 'rtsp://user:cabang1234@10.200.21.168:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-340:
+    source: 'rtsp://user:cabang1234@10.200.21.169:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-357:
+    source: 'rtsp://user:cabang1234@10.200.22.252:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-358:
+    source: 'rtsp://user:cabang1234@10.200.21.201:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-359:
+    source: 'rtsp://user:cabang1234@10.200.21.202:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-360:
+    source: 'rtsp://user:cabang1234@10.200.21.89:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-361:
+    source: 'rtsp://user:cabang1234@10.200.21.90:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-362:
+    source: 'rtsp://user:cabang1234@10.200.21.205:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-363:
+    source: 'rtsp://user:cabang1234@10.200.21.206:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-364:
+    source: 'rtsp://user:cabang1234@10.200.21.207:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-365:
+    source: 'rtsp://user:cabang1234@10.200.21.208:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-366:
+    source: 'rtsp://user:cabang1234@10.200.21.209:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-367:
+    source: 'rtsp://user:cabang1234@10.200.21.210:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-368:
+    source: 'rtsp://service:WSS4Bosch@10.200.21.211:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-369:
+    source: 'rtsp://user:cabang1234@10.200.21.212:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-370:
+    source: 'rtsp://user:cabang1234@10.200.21.213:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-371:
+    source: 'rtsp://user:cabang1234@10.200.21.214:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-375:
+    source: 'rtsp://user:cabang1234@10.200.21.91:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-376:
+    source: 'rtsp://user:cabang1234@10.200.21.92:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-382:
+    source: 'rtsp://user:cabang1234@10.200.21.251:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-383:
+    source: 'rtsp://user:cabang1234@10.200.21.252:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-384:
+    source: 'rtsp://user:cabang1234@10.201.52.200:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-385:
+    source: 'rtsp://user:cabang1234@10.200.22.22:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-386:
+    source: 'rtsp://user:cabang1234@10.200.22.23:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-387:
+    source: 'rtsp://user:cabang1234@10.200.22.24:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-388:
+    source: 'rtsp://user:cabang1234@10.200.22.21:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-389:
+    source: 'rtsp://datin:cabang1234@10.201.54.184:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-390:
+    source: 'rtsp://user:user1234@10.200.54.39:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-391:
+    source: 'rtsp://user:Cabang@2025@10.201.54.186:554/streaming/channels/101'
+    rtspTransport: tcp
+
+  camera-392:
+    source: 'rtsp://user:cabang1234@10.200.21.101:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-393:
+    source: 'rtsp://user:cabang1234@10.200.21.102:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-394:
+    source: 'rtsp://user:cabang@2025@10.200.17.67:554/streaming'
+    rtspTransport: tcp
+
+  camera-397:
+    source: 'rtsp://user:user1234@10.200.22.176:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-401:
+    source: 'rtsp://user:Cabang@2025@10.201.54.212:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-402:
+    source: 'rtsp://user:Cabang@2025@10.201.54.213:554/streaming/channels/1/picture'
+    rtspTransport: tcp
+
+  camera-403:
+    source: 'rtsp://user:Cabang@2025@10.201.54.214:554/ISAPI/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-404:
+    source: 'rtsp://user:cabang1234@10.200.21.121:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-405:
+    source: 'rtsp://user:Cabang@2025@10.201.54.211:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-406:
+    source: 'rtsp://user:Cabang%402025@10.201.54.215:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-407:
+    source: 'rtsp://user:Cabang@2025@10.201.54.216:554/ISAPI/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-408:
+    source: 'rtsp://user:Cabang@2025@10.201.54.217:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-409:
+    source: 'rtsp://user:cabang@2025@10.201.54.181:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-410:
+    source: 'rtsp://admin:multimedia2020@10.200.21.68:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-411:
+    source: 'rtsp://user:Cabang@2026@10.201.54.218:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-412:
+    source: 'rtsp://user:cabang2026@10.201.54.219:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-413:
+    source: 'rtsp://user:cabang2026@10.201.54.220:554/Streaming/Channels/101'
+    rtspTransport: tcp
+
+  camera-414:
+    source: 'rtsp://10.201.54.200/media/video1'
+    rtspTransport: tcp
+
+  camera-415:
+    source: 'rtsp://user:Cabang@2025@10.201.54.195:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-416:
+    source: 'rtsp://user:Cabang@2025@10.201.54.196:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-418:
+    source: 'rtsp://user:Cabang2026@10.200.22.126:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-419:
+    source: 'rtsp://user:cabang2026@10.200.20.120:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-420:
+    source: 'rtsp://user:Cabang2026@10.200.21.154:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-421:
+    source: 'rtsp://user:Cabang2026@10.200.21.88:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-423:
+    source: 'rtsp://user:Cabang2026@10.201.52.239:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-424:
+    source: 'rtsp://admin:multimedia2018@10.200.21.141:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-425:
+    source: 'rtsp://admin:multimedia2019@10.200.21.166:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-426:
+    source: 'rtsp://admin:multimedia2019@10.200.21.164:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-427:
+    source: 'rtsp://admin:multimedia2019@10.200.21.167:554/Streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-428:
+    source: 'rtsp://admin:C@b@ng2025@10.201.52.218:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-429:
+    source: 'rtsp://user:cabang2026@10.201.52.246:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-430:
+    source: 'rtsp://user:Cabang2026@10.200.22.36:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-431:
+    source: 'rtsp://admin:C@b@ng2025@10.200.22.130:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-432:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.142/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-433:
+    source: 'rtsp://user:Cabang2026@10.201.54.143:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-434:
+    source: 'rtsp://admin:multimedia2018@10.200.21.219:554/ISAPI/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-435:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.223:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-436:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.224:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-437:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.225:554/streaming/channels/102'
+    rtspTransport: tcp
+
+  camera-438:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.226:554/streaming/channels/102'
+    rtspTransport: tcp
+

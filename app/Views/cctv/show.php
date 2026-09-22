@@ -71,12 +71,15 @@
 <script>
     var latitude = <?= json_encode((float) $camera['latitude']); ?>;
     var longitude = <?= json_encode((float) $camera['longitude']); ?>;
-    var cctvMap = L.map('cctvMap').setView([latitude, longitude], 16);
+    var hasCoordinates = Number.isFinite(latitude) && Number.isFinite(longitude) && !(latitude === 0 && longitude === 0);
+    var cctvMap = L.map('cctvMap').setView(hasCoordinates ? [latitude, longitude] : [-6.103, 106.883], hasCoordinates ? 16 : 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors'
     }).addTo(cctvMap);
-    L.marker([latitude, longitude]).addTo(cctvMap).bindPopup('<?= esc($camera['nama_camera'], 'js'); ?>').openPopup();
+    if (hasCoordinates) {
+        L.marker([latitude, longitude]).addTo(cctvMap).bindPopup('<?= esc($camera['nama_camera'], 'js'); ?>').openPopup();
+    }
 
     <?php if ($hlsUrl) : ?>
     var video = document.getElementById('cctvVideo');

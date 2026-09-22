@@ -184,12 +184,6 @@
                                             <option value="Sewa" <?= old('status') == 'Sewa' ? 'selected' : ''; ?>>Sewa</option>
                                         </select>
 
-                                        <label>Koordinat Y (latitude)</label>
-                                        <input type="text" id="Latitude" name="latitude" class="form-control" value="<?= old('latitude'); ?>">
-                                        <?php if (isset($validation)) : ?>
-                                            <small class="text-danger"><?= $validation->getError('latitude'); ?></small>
-                                        <?php endif; ?>
-
                                     </div>
                                 </div>
                                 <div class="col-md-6">

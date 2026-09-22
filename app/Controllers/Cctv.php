@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Services\CctvSyncService;
 use App\Models\CctvModel;
 
 class Cctv extends BaseController
@@ -15,12 +16,38 @@ class Cctv extends BaseController
 
     public function index()
     {
+        $cameras = $this->cctvModel
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
+
         return view('cctv/index', [
             'title' => 'CCTV Monitoring',
             'appname' => 'SIMALA',
             'heading' => 'CCTV Monitoring',
-            'cameras' => $this->cctvModel->orderBy('id', 'DESC')->findAll(),
+            'cameras' => $cameras,
+            'pager' => $this->cctvModel->pager,
         ]);
+    }
+
+    public function sync()
+    {
+        try {
+            $stats = (new CctvSyncService())->sync();
+            $this->syncMediaMtxConfig();
+            $message = sprintf(
+                'Sinkronisasi selesai: %d data baru, %d data diperbarui.',
+                $stats['inserted'],
+                $stats['updated']
+            );
+
+            return redirect()->to('/cctv')->with('pesan', $message);
+        } catch (\Throwable $exception) {
+            log_message('error', 'CCTV sync failed: {message}', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return redirect()->to('/cctv')->with('error', 'Sinkronisasi gagal. Periksa koneksi database sumber.');
+        }
     }
 
     public function create()
@@ -77,6 +104,8 @@ class Cctv extends BaseController
         if (!$camera) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
         }
+
+        $this->syncMediaMtxConfig();
 
         return view('cctv/show', [
             'title' => $camera['nama_camera'],
@@ -140,6 +169,9 @@ class Cctv extends BaseController
     {
         $baseUrl = trim((string) env('CCTV_WEBRTC_BASE_URL', ''), '/');
         $pathTemplate = trim((string) env('CCTV_WEBRTC_PATH_TEMPLATE', 'camera-{id}'), '/');
+        if (strpos($pathTemplate, '{id}') === false) {
+            $pathTemplate = 'camera-{id}';
+        }
         $path = str_replace('{id}', (string) $id, $pathTemplate);
 
         return $baseUrl === '' ? '' : $baseUrl . '/' . $path . '/?autoplay=true';
@@ -148,7 +180,7 @@ class Cctv extends BaseController
     private function syncMediaMtxConfig(): void
     {
         $configPath = ROOTPATH . 'streaming/mediamtx.yml';
-        $config = "logLevel: info\n\nhls: yes\nhlsAddress: :8888\n\npaths:\n";
+        $config = "logLevel: info\n\nhls: yes\nhlsAddress: :8888\n\nwebrtc: yes\nwebrtcAddress: :8889\n\npaths:\n";
 
         foreach ($this->cctvModel->orderBy('id', 'ASC')->findAll() as $camera) {
             if (stripos((string) $camera['rtsp_url'], 'rtsp://') !== 0) {

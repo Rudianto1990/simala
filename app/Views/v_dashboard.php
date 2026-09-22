@@ -50,11 +50,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label for="imageWidth">imageWidth</label>
-                                <input type="number" id="imageWidth" class="form-control form-control-sm" value="640" min="1" step="1" disabled>
+                                <input type="number" id="imageWidth" class="form-control form-control-sm" value="304" min="1" step="1" disabled>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="imageHeight">imageHeight</label>
-                                <input type="number" id="imageHeight" class="form-control form-control-sm" value="480" min="1" step="1" disabled>
+                                <input type="number" id="imageHeight" class="form-control form-control-sm" value="162" min="1" step="1" disabled>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="boundSouth">South</label>
@@ -73,6 +73,7 @@
                                 <input type="number" id="boundEast" class="form-control form-control-sm" value="106.955" step="0.000001" disabled>
                             </div>
                         </div>
+                        <button type="button" id="toggleDenahLock" class="btn btn-sm btn-secondary"><i class="fas fa-lock mr-1"></i>Buka kunci</button>
                         <button type="button" id="applyDenahSettings" class="btn btn-sm btn-primary" disabled>Terapkan penyesuaian</button>
                         <span class="small text-muted ml-2">Tarik gambar untuk memindahkan. Tarik handle di sudut kanan-atas untuk mengubah ukuran.</span>
                         <div class="mt-2 small text-muted">Konfigurasi aktif:</div>
@@ -301,9 +302,9 @@
         maxZoom: 19
     }).addTo(mymap);
 
-    var imageWidth = 302;
-    var imageHeight = 266;
-    var denahBounds = [[-6.129426629182171, 106.85606981646343], [-6.07543762918217, 106.92555381646342]];
+    var imageWidth = 300;
+    var imageHeight = 161;
+    var denahBounds = [[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]];
     var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
         opacity: 0.82,
         interactive: true
@@ -313,6 +314,7 @@
 
     var dragState = null;
     var resizeState = null;
+    var denahLocked = true;
     var resizeHandle = L.marker(denahBounds[1], {
         draggable: true,
         icon: L.divIcon({
@@ -584,6 +586,8 @@
     }
 
     function syncDenahInputs() {
+        document.getElementById('imageWidth').value = imageWidth;
+        document.getElementById('imageHeight').value = imageHeight;
         document.getElementById('boundSouth').value = denahBounds[0][0].toFixed(6);
         document.getElementById('boundWest').value = denahBounds[0][1].toFixed(6);
         document.getElementById('boundNorth').value = denahBounds[1][0].toFixed(6);
@@ -591,6 +595,10 @@
     }
 
     function startDenahDrag(event) {
+        if (denahLocked) {
+            return;
+        }
+
         dragState = {
             start: event.latlng,
             bounds: [
@@ -630,6 +638,11 @@
     }
 
     resizeHandle.on('dragstart', function () {
+        if (denahLocked) {
+            resizeHandle.setLatLng(denahBounds[1]);
+            return;
+        }
+
         resizeState = {
             bounds: [
                 [denahBounds[0][0], denahBounds[0][1]],
@@ -670,12 +683,45 @@
         mymap.dragging.enable();
     });
 
+    function setDenahLockState(locked) {
+        denahLocked = locked;
+
+        ['imageWidth', 'imageHeight', 'boundSouth', 'boundWest', 'boundNorth', 'boundEast'].forEach(function (id) {
+            document.getElementById(id).disabled = locked;
+        });
+        document.getElementById('applyDenahSettings').disabled = locked;
+
+        if (locked) {
+            dragState = null;
+            resizeState = null;
+            mymap.dragging.enable();
+            resizeHandle.setLatLng(denahBounds[1]);
+            resizeHandle.setOpacity(0.45);
+        } else {
+            resizeHandle.setOpacity(1);
+        }
+
+        var lockButton = document.getElementById('toggleDenahLock');
+        lockButton.innerHTML = locked
+            ? '<i class="fas fa-lock mr-1"></i>Buka kunci'
+            : '<i class="fas fa-unlock mr-1"></i>Kunci overlay';
+        lockButton.className = locked ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-warning';
+    }
+
     denahOverlay.on('mousedown touchstart', startDenahDrag);
     mymap.on('mousemove touchmove', moveDenah);
     document.addEventListener('mouseup', endDenahDrag);
     document.addEventListener('touchend', endDenahDrag);
 
+    document.getElementById('toggleDenahLock').addEventListener('click', function () {
+        setDenahLockState(!denahLocked);
+    });
+
     document.getElementById('applyDenahSettings').addEventListener('click', function () {
+        if (denahLocked) {
+            return;
+        }
+
         imageWidth = Number(document.getElementById('imageWidth').value);
         imageHeight = Number(document.getElementById('imageHeight').value);
         denahBounds = [
@@ -694,6 +740,7 @@
     renderMarkers();
     renderCctvMarkers();
     updateDenahSettingsInfo();
+    setDenahLockState(true);
 
     var currentLayout = '<?= $activeLayout ?? "baso"; ?>';
 
@@ -702,9 +749,9 @@
             name: 'Layout BASO',
             center: [-6.102432, 106.890812],
             zoom: 14,
-            bounds: [[-6.129426629182171, 106.85606981646343], [-6.07543762918217, 106.92555381646342]],
-            imageWidth: 302,
-            imageHeight: 266,
+            bounds:[[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]],
+            imageWidth: 300,
+            imageHeight: 161,
             imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
         },
         kalijapat: {

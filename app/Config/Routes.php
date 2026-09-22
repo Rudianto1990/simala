@@ -22,6 +22,7 @@ $routes->get('dashboard/dermaga_c', 'Dashboard::dermaga_c', ['filter' => 'ceklog
 
 $routes->group('cctv', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Cctv::index');
+    $routes->post('sync', 'Cctv::sync');
     $routes->get('create', 'Cctv::create');
     $routes->post('store', 'Cctv::store');
     $routes->get('show/(:num)', 'Cctv::show/$1');

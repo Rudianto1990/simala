@@ -3,7 +3,15 @@
 <div class="container-fluid">
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800"><?= esc($heading); ?></h1>
-        <a href="<?= base_url('cctv/create'); ?>" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Tambah CCTV</a>
+        <div>
+            <form action="<?= base_url('cctv/sync'); ?>" method="post" class="d-inline">
+                <?= csrf_field(); ?>
+                <button type="submit" class="btn btn-outline-info" onclick="return confirm('Tarik data CCTV terbaru dari server sumber?');">
+                    <i class="fas fa-sync-alt mr-1"></i> Sinkronkan
+                </button>
+            </form>
+            <a href="<?= base_url('cctv/create'); ?>" class="btn btn-primary"><i class="fas fa-plus mr-1"></i> Tambah CCTV</a>
+        </div>
     </div>
 
     <?php if (session()->getFlashdata('pesan')) : ?>
@@ -12,26 +20,32 @@
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         </div>
     <?php endif; ?>
+    <?php if (session()->getFlashdata('error')) : ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= esc(session()->getFlashdata('error')); ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+    <?php endif; ?>
 
     <div class="row">
-        <div class="col-lg-5 mb-4">
-            <div class="card shadow h-100">
+        <div class="col-12 mb-4">
+            <div class="card shadow">
                 <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Peta Lokasi CCTV</h6></div>
-                <div class="card-body p-2"><div id="cctvMap" style="height: 560px;"></div></div>
+                <div class="card-body p-2"><div id="cctvmap" style="height: 420px;"></div></div>
             </div>
         </div>
-        <div class="col-lg-7 mb-4">
+        <div id="cctvtable" class="col-12 mb-4">
             <div class="card shadow">
                 <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Daftar Kamera</h6></div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover" id="cctvTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>Nama Kamera</th>
                                     <th>Lokasi</th>
                                     <th>IP Address</th>
-                                    <th>Tipe</th>
+                                    <th>Inventory Code</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -41,22 +55,25 @@
                                         <td><?= esc($camera['nama_camera']); ?></td>
                                         <td><?= esc($camera['location']); ?></td>
                                         <td><code><?= esc($camera['ip_address']); ?></code></td>
-                                        <td><span class="badge badge-info"><?= esc($camera['type_camera']); ?></span></td>
+                                        <td><span class="badge badge-info"><?= esc($camera['inventory_code'] ?? '-'); ?></span></td>
                                         <td class="text-nowrap">
                                             <button type="button" class="btn btn-success btn-sm preview-camera" title="Preview CCTV"
                                                 data-camera-id="<?= (int) $camera['id']; ?>"
                                                 data-camera-name="<?= esc($camera['nama_camera'], 'attr'); ?>"
-                                                data-camera-ip="<?= esc($camera['ip_address'], 'attr'); ?>">
+                                                data-camera-ip="<?= esc($camera['ip_address'], 'attr'); ?>"
+                                                data-camera-inventory="<?= esc($camera['inventory_code'] ?? '-', 'attr'); ?>"
+                                                data-camera-location="<?= esc($camera['location'], 'attr'); ?>">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <a href="<?= base_url('cctv/show/' . $camera['id']); ?>" class="btn btn-info btn-sm" title="Live View"><i class="fas fa-video"></i></a>
-                                            <a href="<?= base_url('cctv/edit/' . $camera['id']); ?>" class="btn btn-warning btn-sm" title="Edit"><i class="fas fa-edit"></i></a>
-                                            <a href="<?= base_url('cctv/delete/' . $camera['id']); ?>" class="btn btn-danger btn-sm" title="Hapus" onclick="return confirm('Hapus kamera ini?')"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="d-flex justify-content-center mt-3 overflow-auto">
+                        <?= $pager->links('default', 'cctv'); ?>
                     </div>
                     <?php if (!$cameras) : ?><div class="text-muted text-center py-3">Belum ada data CCTV.</div><?php endif; ?>
                 </div>
@@ -71,20 +88,12 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="previewModalTitle">Preview CCTV</h5>
                 <div class="ml-auto d-flex align-items-center">
-                    <button type="button" id="fullscreenBtn" class="btn btn-sm btn-light mr-2" title="Fullscreen"><i class="fas fa-expand"></i></button>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span aria-hidden="true">&times;</span></button>
                 </div>
             </div>
             <div class="modal-body text-center">
-                <div id="countdownText" class="font-weight-bold text-primary mb-2" style="display:none;"></div>
-                <div id="loadingSpinner" class="my-3" style="display:none;"><div class="spinner-border text-primary"></div></div>
-                <iframe id="modalFrame" allow="autoplay" style="width:100%;height:500px;border:0;display:none;" title="Preview CCTV"></iframe>
-                <img id="snapshotImage" alt="Snapshot CCTV" style="width:100%;height:500px;object-fit:contain;display:none;">
-                <div id="previewMessage" class="small text-muted mt-2"></div>
-                <div class="mt-3">
-                    <button id="snapshotBtn" type="button" class="btn btn-warning btn-sm">Snapshot Mode</button>
-                    <button id="webrtcBtn" type="button" class="btn btn-primary btn-sm">WebRTC Mode</button>
-                </div>
+                <dl id="previewDetails" class="row text-left small mb-3">
+                </dl>
             </div>
         </div>
     </div>
@@ -93,8 +102,9 @@
 <link rel="stylesheet" href="<?= base_url('js/leaflet/leaflet.css'); ?>">
 <script src="<?= base_url('js/leaflet/leaflet.js'); ?>"></script>
 <script>
+document.addEventListener('DOMContentLoaded', function () {
     var cctvData = <?= json_encode($cameras, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-    var cctvMap = L.map('cctvMap').setView([-6.103, 106.883], 14);
+    var cctvMap = L.map('cctvmap').setView([-6.103, 106.883], 14);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors'
@@ -103,7 +113,7 @@
     cctvData.forEach(function (camera) {
         var latitude = Number(camera.latitude);
         var longitude = Number(camera.longitude);
-        if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || (latitude === 0 && longitude === 0)) return;
         L.marker([latitude, longitude]).addTo(cctvMap).bindPopup(
             '<strong>' + escapeHtml(camera.nama_camera) + '</strong><br>' +
             escapeHtml(camera.location) + '<br><a href="<?= base_url('cctv/show'); ?>/' + camera.id + '">Lihat CCTV</a>'
@@ -111,89 +121,54 @@
     });
 
     var previewModal = $('#previewModal');
-    var modalFrame = document.getElementById('modalFrame');
-    var snapshotImage = document.getElementById('snapshotImage');
-    var previewMessage = document.getElementById('previewMessage');
-    var countdownText = document.getElementById('countdownText');
-    var activeCamera = null;
-    var countdownTimer = null;
-    var snapshotRefreshTimer = null;
-    var webRtcBaseUrl = <?= json_encode(trim((string) env('CCTV_WEBRTC_BASE_URL', ''), '/')); ?>;
-    var webRtcPathTemplate = <?= json_encode(trim((string) env('CCTV_WEBRTC_PATH_TEMPLATE', 'camera-{id}'), '/')); ?>;
+    var previewDetails = document.getElementById('previewDetails');
+    var fieldLabels = {
+        id: 'ID',
+        source_id: 'Source ID',
+        inventory_code: 'Inventory Code',
+        nama_camera: 'Nama Kamera',
+        location: 'Lokasi',
+        ip_address: 'IP Address',
+        type_camera: 'Tipe Kamera',
+        rtsp_url: 'RTSP URL',
+        latitude: 'Latitude',
+        longitude: 'Longitude',
+        source_name: 'Source Name',
+        sub_division: 'Sub Division',
+        category: 'Category',
+        jenis_kategori: 'Jenis Kategori',
+        merk: 'Merk',
+        serial_number: 'Serial Number',
+        source_status: 'Source Status',
+        reg_date: 'Registration Date',
+        nvr: 'NVR',
+        nomor_urut: 'Nomor Urut',
+        link_img: 'Image Link',
+        source_model: 'Source Model',
+        source_created_at: 'Source Created At',
+        source_updated_at: 'Source Updated At',
+        created_at: 'Created At',
+        updated_at: 'Updated At'
+    };
 
     $('.preview-camera').on('click', function () {
-        activeCamera = this.dataset;
-        document.getElementById('previewModalTitle').textContent = 'Preview CCTV - ' + activeCamera.cameraName;
+        var cameraId = Number(this.dataset.cameraId);
+        var camera = cctvData.find(function (item) { return Number(item.id) === cameraId; });
+        if (!camera) return;
+
+        document.getElementById('previewModalTitle').textContent = 'Preview CCTV - ' + (camera.nama_camera || '-');
+        previewDetails.innerHTML = '';
+        Object.keys(camera).forEach(function (key) {
+            var label = document.createElement('dt');
+            label.className = 'col-sm-4';
+            label.textContent = fieldLabels[key] || key;
+            var value = document.createElement('dd');
+            value.className = 'col-sm-8 mb-1 text-break';
+            value.textContent = camera[key] === null || camera[key] === '' ? '-' : camera[key];
+            previewDetails.appendChild(label);
+            previewDetails.appendChild(value);
+        });
         previewModal.modal('show');
-        showSnapshot();
-    });
-
-    function showSnapshot() {
-        clearInterval(countdownTimer);
-        clearInterval(snapshotRefreshTimer);
-        modalFrame.style.display = 'none';
-        snapshotImage.style.display = 'block';
-        document.getElementById('snapshotBtn').classList.add('active');
-        document.getElementById('webrtcBtn').classList.remove('active');
-        countdownText.style.display = 'block';
-        var seconds = 3;
-        countdownText.textContent = 'Menghubungkan snapshot... ' + seconds;
-        countdownTimer = setInterval(function () {
-            seconds -= 1;
-            countdownText.textContent = seconds > 0 ? 'Menghubungkan snapshot... ' + seconds : '';
-            if (seconds <= 0) {
-                clearInterval(countdownTimer);
-                countdownText.style.display = 'none';
-            }
-        }, 1000);
-        var refreshSnapshot = function () {
-            if (!activeCamera) {
-                return;
-            }
-
-            snapshotImage.src = '<?= base_url('cctv/snapshot'); ?>/' + activeCamera.cameraId + '?t=' + Date.now();
-        };
-
-        refreshSnapshot();
-        snapshotRefreshTimer = setInterval(refreshSnapshot, 2000);
-        snapshotImage.onerror = function () {
-            previewMessage.textContent = 'Snapshot gagal dimuat. Periksa sesi login dan izin akses kamera.';
-        };
-        snapshotImage.onload = function () { previewMessage.textContent = 'Live snapshot aktif.'; };
-    }
-
-    document.getElementById('snapshotBtn').addEventListener('click', showSnapshot);
-    document.getElementById('webrtcBtn').addEventListener('click', function () {
-        if (!webRtcBaseUrl || !activeCamera) {
-            previewMessage.textContent = 'Gateway WebRTC belum dikonfigurasi.';
-            return;
-        }
-        clearInterval(snapshotRefreshTimer);
-        var path = webRtcPathTemplate.replace('{id}', activeCamera.cameraId);
-        modalFrame.src = webRtcBaseUrl + '/' + path + '/?autoplay=true';
-        modalFrame.style.display = 'block';
-        snapshotImage.style.display = 'none';
-        countdownText.style.display = 'none';
-        document.getElementById('snapshotBtn').classList.remove('active');
-        this.classList.add('active');
-        previewMessage.textContent = 'WebRTC mode aktif.';
-    });
-
-    document.getElementById('fullscreenBtn').addEventListener('click', function () {
-        var content = document.querySelector('#previewModal .modal-content');
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        } else if (content.requestFullscreen) {
-            content.requestFullscreen();
-        }
-    });
-
-    previewModal.on('hidden.bs.modal', function () {
-        clearInterval(countdownTimer);
-        clearInterval(snapshotRefreshTimer);
-        modalFrame.src = '';
-        snapshotImage.src = '';
-        activeCamera = null;
     });
 
     function escapeHtml(value) {
@@ -201,5 +176,6 @@
             return {'&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;'}[character];
         });
     }
+});
 </script>
 <?= $this->endSection(); ?>
