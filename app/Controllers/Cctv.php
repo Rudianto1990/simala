@@ -160,14 +160,14 @@ class Cctv extends BaseController
 
     private function hlsUrl(int $id): string
     {
-        $baseUrl = trim((string) env('CCTV_HLS_BASE_URL', ''), '/');
+        $baseUrl = $this->mediaMtxBaseUrl('CCTV_HLS_BASE_URL', 8888);
 
         return $baseUrl === '' ? '' : $baseUrl . '/camera-' . $id . '/index.m3u8';
     }
 
     private function webrtcUrl(int $id): string
     {
-        $baseUrl = trim((string) env('CCTV_WEBRTC_BASE_URL', ''), '/');
+        $baseUrl = $this->mediaMtxBaseUrl('CCTV_WEBRTC_BASE_URL', 8889);
         $pathTemplate = trim((string) env('CCTV_WEBRTC_PATH_TEMPLATE', 'camera-{id}'), '/');
         if (strpos($pathTemplate, '{id}') === false) {
             $pathTemplate = 'camera-{id}';
@@ -175,6 +175,21 @@ class Cctv extends BaseController
         $path = str_replace('{id}', (string) $id, $pathTemplate);
 
         return $baseUrl === '' ? '' : $baseUrl . '/' . $path . '/?autoplay=true';
+    }
+
+    private function mediaMtxBaseUrl(string $configKey, int $defaultPort): string
+    {
+        $configuredUrl = trim((string) env($configKey, ''), '/');
+        if ($configuredUrl === '') {
+            return '';
+        }
+
+        $parts = parse_url($configuredUrl);
+        $scheme = $this->request->getUri()->getScheme() ?: ($parts['scheme'] ?? 'http');
+        $host = $this->request->getUri()->getHost() ?: ($parts['host'] ?? '127.0.0.1');
+        $port = $parts['port'] ?? $defaultPort;
+
+        return $scheme . '://' . $host . ':' . $port;
     }
 
     private function syncMediaMtxConfig(): void

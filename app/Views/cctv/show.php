@@ -19,14 +19,14 @@
                 <div class="card-body">
                     <?php if ($hlsUrl || $webrtcUrl) : ?>
                         <div class="btn-group mb-3" role="group" aria-label="Mode live stream">
-                            <?php if ($hlsUrl) : ?><button type="button" id="hlsModeBtn" class="btn <?= $webrtcUrl ? 'btn-outline-primary' : 'btn-primary'; ?> btn-sm">HLS Mode</button><?php endif; ?>
-                            <?php if ($webrtcUrl) : ?><button type="button" id="webrtcModeBtn" class="btn btn-primary btn-sm">WebRTC Mode</button><?php endif; ?>
+                            <?php if ($hlsUrl) : ?><button type="button" id="hlsModeBtn" class="btn btn-primary btn-sm">HLS Mode</button><?php endif; ?>
+                            <?php if ($webrtcUrl) : ?><button type="button" id="webrtcModeBtn" class="btn <?= $hlsUrl ? 'btn-outline-primary' : 'btn-primary'; ?> btn-sm">WebRTC Mode</button><?php endif; ?>
                         </div>
                         <?php if ($hlsUrl) : ?>
-                        <video id="cctvVideo" class="w-100 bg-dark rounded mb-3" style="<?= $webrtcUrl ? 'display: none;' : ''; ?>" controls autoplay muted playsinline></video>
+                        <video id="cctvVideo" class="w-100 bg-dark rounded mb-3" style="display: block;" controls autoplay muted playsinline></video>
                         <?php endif; ?>
                         <?php if ($webrtcUrl) : ?>
-                        <iframe id="webrtcFrame" class="w-100 bg-dark rounded mb-3" style="height: 420px; border: 0; display: <?= $webrtcUrl ? 'block' : 'none'; ?>;" allow="autoplay; fullscreen" allowfullscreen title="WebRTC CCTV"></iframe>
+                        <iframe id="webrtcFrame" class="w-100 bg-dark rounded mb-3" style="height: 420px; border: 0; display: <?= $hlsUrl ? 'none' : 'block'; ?>;" allow="autoplay; fullscreen" allowfullscreen title="WebRTC CCTV"></iframe>
                         <?php endif; ?>
                         <div id="streamMessage" class="small text-muted">Menghubungkan ke live stream...</div>
                     <?php else : ?>
@@ -101,7 +101,6 @@
     <?php if ($webrtcUrl) : ?>
     var webrtcFrame = document.getElementById('webrtcFrame');
     var webrtcUrl = <?= json_encode($webrtcUrl); ?>;
-    webrtcFrame.src = webrtcUrl;
     document.getElementById('webrtcModeBtn').addEventListener('click', function () {
         <?php if ($hlsUrl) : ?>document.getElementById('cctvVideo').style.display = 'none';<?php endif; ?>
         webrtcFrame.style.display = 'block';
@@ -115,7 +114,7 @@
     <?php if ($hlsUrl) : ?>
     document.getElementById('hlsModeBtn').addEventListener('click', function () {
         document.getElementById('cctvVideo').style.display = 'block';
-        <?php if ($webrtcUrl) : ?>webrtcFrame.style.display = 'none'; webrtcFrame.src = '';<?php endif; ?>
+        <?php if ($webrtcUrl) : ?>webrtcFrame.style.display = 'none';<?php endif; ?>
         this.classList.replace('btn-outline-primary', 'btn-primary');
         <?php if ($webrtcUrl) : ?>document.getElementById('webrtcModeBtn').classList.replace('btn-primary', 'btn-outline-primary');<?php endif; ?>
         document.getElementById('streamMessage').textContent = 'HLS mode aktif.';
