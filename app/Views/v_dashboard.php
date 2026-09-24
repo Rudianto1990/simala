@@ -10,8 +10,27 @@
     <div class="row">
         <div class="col">
             <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                    <h6 class="m-0 font-weight-bold text-primary">Peta Monitoring Alat</h6>
+                <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
+                        <h6 class="m-0 font-weight-bold text-primary mr-3 mb-2 mb-sm-0">Peta Monitoring Alat</h6>
+                        <div class="btn-group shadow-sm" role="group" aria-label="Toggle Layout Peta">
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'baso' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutBaso" onclick="switchLayout('baso')">
+                                <i class="fas fa-layer-group mr-1"></i> BASO
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'kalijapat' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutKalijapat" onclick="switchLayout('kalijapat')">
+                                <i class="fas fa-anchor mr-1"></i> Dermaga Kalijapat
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_a' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaA" onclick="switchLayout('dermaga_a')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga A
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_b' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaB" onclick="switchLayout('dermaga_b')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga B
+                            </button>
+                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_c' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaC" onclick="switchLayout('dermaga_c')">
+                                <i class="fas fa-ship mr-1"></i> Dermaga C
+                            </button>
+                        </div>
+                    </div>
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <span class="badge badge-pill" style="background:#d9534f; color:#fff; padding:6px 10px;">MBC</span>
                         <span class="badge badge-pill" style="background:#5cb85c; color:#fff; padding:6px 10px;">RTG</span>
@@ -31,11 +50,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <label for="imageWidth">imageWidth</label>
-                                <input type="number" id="imageWidth" class="form-control form-control-sm" value="640" min="1" step="1" disabled>
+                                <input type="number" id="imageWidth" class="form-control form-control-sm" value="304" min="1" step="1" disabled>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="imageHeight">imageHeight</label>
-                                <input type="number" id="imageHeight" class="form-control form-control-sm" value="480" min="1" step="1" disabled>
+                                <input type="number" id="imageHeight" class="form-control form-control-sm" value="162" min="1" step="1" disabled>
                             </div>
                             <div class="form-group col-md-2">
                                 <label for="boundSouth">South</label>
@@ -54,6 +73,7 @@
                                 <input type="number" id="boundEast" class="form-control form-control-sm" value="106.955" step="0.000001" disabled>
                             </div>
                         </div>
+                        <button type="button" id="toggleDenahLock" class="btn btn-sm btn-secondary"><i class="fas fa-lock mr-1"></i>Buka kunci</button>
                         <button type="button" id="applyDenahSettings" class="btn btn-sm btn-primary" disabled>Terapkan penyesuaian</button>
                         <span class="small text-muted ml-2">Tarik gambar untuk memindahkan. Tarik handle di sudut kanan-atas untuk mengubah ukuran.</span>
                         <div class="mt-2 small text-muted">Konfigurasi aktif:</div>
@@ -165,7 +185,7 @@
 <script>
     var alatData = <?= json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     var cctvData = <?= json_encode($cctv ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-    var denahUrl = '<?= base_url('img/denah/denah.png'); ?>';
+    var denahUrl = '<?= base_url(($activeLayout ?? "baso") === "kalijapat" ? "img/denah/kalijapat.png" : "img/denah/denah.png"); ?>';
 
     function getCategoryKey(item) {
         var nama = (item.nama_alat || '').toUpperCase();
@@ -254,22 +274,47 @@
 
     new FullscreenControl().addTo(mymap);
 
+    var LayoutToggleControl = L.Control.extend({
+        options: {
+            position: 'topleft'
+        },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            container.style.backgroundColor = '#fff';
+            container.style.padding = '4px';
+            container.style.borderRadius = '4px';
+            container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+            container.innerHTML = '<div class="btn-group btn-group-toggle" role="group">' +
+                '<button type="button" class="btn btn-xs btn-primary font-weight-bold" id="mapBtnBaso" onclick="switchLayout(\'baso\')" style="font-size:11px; padding:3px 8px;">BASO</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnKalijapat" onclick="switchLayout(\'kalijapat\')" style="font-size:11px; padding:3px 8px;">Dermaga Kalijapat</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaA" onclick="switchLayout(\'dermaga_a\')" style="font-size:11px; padding:3px 8px;">Dermaga A</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaB" onclick="switchLayout(\'dermaga_b\')" style="font-size:11px; padding:3px 8px;">Dermaga B</button>' +
+                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaC" onclick="switchLayout(\'dermaga_c\')" style="font-size:11px; padding:3px 8px;">Dermaga C</button>' +
+                '</div>';
+            L.DomEvent.disableClickPropagation(container);
+            return container;
+        }
+    });
+    new LayoutToggleControl().addTo(mymap);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         maxZoom: 19
     }).addTo(mymap);
 
-    var imageWidth = 302;
-    var imageHeight = 266;
-    var denahBounds = [[-6.129768, 106.855984], [-6.075779, 106.925468]];
+    var imageWidth = 300;
+    var imageHeight = 161;
+    var denahBounds = [[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]];
     var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
         opacity: 0.82,
         interactive: true
     }).addTo(mymap);
-    mymap.setView([-6.103, 106.883], 14);
+    mymap.setView([-6.102432, 106.890812], 14);
+
 
     var dragState = null;
     var resizeState = null;
+    var denahLocked = true;
     var resizeHandle = L.marker(denahBounds[1], {
         draggable: true,
         icon: L.divIcon({
@@ -541,6 +586,8 @@
     }
 
     function syncDenahInputs() {
+        document.getElementById('imageWidth').value = imageWidth;
+        document.getElementById('imageHeight').value = imageHeight;
         document.getElementById('boundSouth').value = denahBounds[0][0].toFixed(6);
         document.getElementById('boundWest').value = denahBounds[0][1].toFixed(6);
         document.getElementById('boundNorth').value = denahBounds[1][0].toFixed(6);
@@ -548,6 +595,10 @@
     }
 
     function startDenahDrag(event) {
+        if (denahLocked) {
+            return;
+        }
+
         dragState = {
             start: event.latlng,
             bounds: [
@@ -587,6 +638,11 @@
     }
 
     resizeHandle.on('dragstart', function () {
+        if (denahLocked) {
+            resizeHandle.setLatLng(denahBounds[1]);
+            return;
+        }
+
         resizeState = {
             bounds: [
                 [denahBounds[0][0], denahBounds[0][1]],
@@ -627,12 +683,45 @@
         mymap.dragging.enable();
     });
 
+    function setDenahLockState(locked) {
+        denahLocked = locked;
+
+        ['imageWidth', 'imageHeight', 'boundSouth', 'boundWest', 'boundNorth', 'boundEast'].forEach(function (id) {
+            document.getElementById(id).disabled = locked;
+        });
+        document.getElementById('applyDenahSettings').disabled = locked;
+
+        if (locked) {
+            dragState = null;
+            resizeState = null;
+            mymap.dragging.enable();
+            resizeHandle.setLatLng(denahBounds[1]);
+            resizeHandle.setOpacity(0.45);
+        } else {
+            resizeHandle.setOpacity(1);
+        }
+
+        var lockButton = document.getElementById('toggleDenahLock');
+        lockButton.innerHTML = locked
+            ? '<i class="fas fa-lock mr-1"></i>Buka kunci'
+            : '<i class="fas fa-unlock mr-1"></i>Kunci overlay';
+        lockButton.className = locked ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-warning';
+    }
+
     denahOverlay.on('mousedown touchstart', startDenahDrag);
     mymap.on('mousemove touchmove', moveDenah);
     document.addEventListener('mouseup', endDenahDrag);
     document.addEventListener('touchend', endDenahDrag);
 
+    document.getElementById('toggleDenahLock').addEventListener('click', function () {
+        setDenahLockState(!denahLocked);
+    });
+
     document.getElementById('applyDenahSettings').addEventListener('click', function () {
+        if (denahLocked) {
+            return;
+        }
+
         imageWidth = Number(document.getElementById('imageWidth').value);
         imageHeight = Number(document.getElementById('imageHeight').value);
         denahBounds = [
@@ -651,5 +740,103 @@
     renderMarkers();
     renderCctvMarkers();
     updateDenahSettingsInfo();
+    setDenahLockState(true);
+
+    var currentLayout = '<?= $activeLayout ?? "baso"; ?>';
+
+    var layoutConfigs = {
+        baso: {
+            name: 'Layout BASO',
+            center: [-6.102432, 106.890812],
+            zoom: 14,
+            bounds:[[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]],
+            imageWidth: 300,
+            imageHeight: 161,
+            imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
+        },
+        kalijapat: {
+            name: 'Layout Dermaga Kalijapat',
+            center: [-6.1148, 106.8632],
+            zoom: 16,
+            bounds: [[-6.1265, 106.8540], [-6.1065, 106.8730]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_a: {
+            name: 'Layout Dermaga A',
+            center: [-6.1085, 106.8785],
+            zoom: 16,
+            bounds: [[-6.1200, 106.8690], [-6.1000, 106.8880]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_b: {
+            name: 'Layout Dermaga B',
+            center: [-6.1040, 106.8845],
+            zoom: 16,
+            bounds: [[-6.1155, 106.8750], [-6.0955, 106.8940]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        },
+        dermaga_c: {
+            name: 'Layout Dermaga C',
+            center: [-6.0995, 106.8910],
+            zoom: 16,
+            bounds: [[-6.1110, 106.8815], [-6.0910, 106.9005]],
+            imageWidth: 302,
+            imageHeight: 266,
+            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+        }
+    };
+
+    function switchLayout(layoutName) {
+        if (!layoutConfigs[layoutName]) return;
+        currentLayout = layoutName;
+        var config = layoutConfigs[layoutName];
+
+        mymap.flyTo(config.center, config.zoom, { duration: 1.2 });
+
+        denahBounds = config.bounds;
+        imageWidth = config.imageWidth;
+        imageHeight = config.imageHeight;
+
+        if (config.imageUrl && typeof denahOverlay.setUrl === 'function') {
+            denahOverlay.setUrl(config.imageUrl);
+        }
+        denahOverlay.setBounds(denahBounds);
+        resizeHandle.setLatLng(denahBounds[1]);
+
+        syncDenahInputs();
+        renderMarkers();
+        updateDenahSettingsInfo();
+
+        var layoutKeys = ['baso', 'kalijapat', 'dermaga_a', 'dermaga_b', 'dermaga_c'];
+        var idSuffixes = {
+            baso: 'Baso',
+            kalijapat: 'Kalijapat',
+            dermaga_a: 'DermagaA',
+            dermaga_b: 'DermagaB',
+            dermaga_c: 'DermagaC'
+        };
+
+        layoutKeys.forEach(function(k) {
+            var s = idSuffixes[k];
+            var btn = document.getElementById('btnLayout' + s);
+            var mapBtn = document.getElementById('mapBtn' + s);
+            if (btn) {
+                btn.className = (k === layoutName) ? 'btn btn-sm btn-primary active' : 'btn btn-sm btn-outline-primary';
+            }
+            if (mapBtn) {
+                mapBtn.className = (k === layoutName) ? 'btn btn-xs btn-primary font-weight-bold' : 'btn btn-xs btn-outline-primary font-weight-bold';
+            }
+        });
+    }
+
+    if (layoutConfigs[currentLayout]) {
+        switchLayout(currentLayout);
+    }
 </script>
 <?= $this->endSection(); ?>

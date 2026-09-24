@@ -51,6 +51,39 @@ class Database extends Config
         ],
     ];
 
+    /**
+     * Read-only connection to the external CCTV inventory database.
+     * Credentials are supplied through the environment file.
+     *
+     * @var array<string, mixed>
+     */
+    public array $cctvSource = [
+        'DSN'          => '',
+        'hostname'     => '127.0.0.1',
+        'username'     => '',
+        'password'     => '',
+        'database'     => 'simanis',
+        'DBDriver'     => 'MySQLi',
+        'DBPrefix'     => '',
+        'pConnect'     => false,
+        'DBDebug'      => false,
+        'charset'      => 'utf8mb4',
+        'DBCollat'     => 'utf8mb4_general_ci',
+        'swapPre'      => '',
+        'encrypt'      => false,
+        'compress'     => false,
+        'strictOn'     => false,
+        'failover'     => [],
+        'port'         => 3306,
+        'numberNative' => false,
+        'foundRows'    => false,
+        'dateFormat'   => [
+            'date'     => 'Y-m-d',
+            'datetime' => 'Y-m-d H:i:s',
+            'time'     => 'H:i:s',
+        ],
+    ];
+
     //    /**
     //     * Sample database connection for SQLite3.
     //     *
@@ -193,6 +226,12 @@ class Database extends Config
     public function __construct()
     {
         parent::__construct();
+
+        $this->cctvSource['hostname'] = (string) env('CCTV_SOURCE_DB_HOST', $this->cctvSource['hostname']);
+        $this->cctvSource['username'] = (string) env('CCTV_SOURCE_DB_USER', $this->cctvSource['username']);
+        $this->cctvSource['password'] = (string) env('CCTV_SOURCE_DB_PASSWORD', $this->cctvSource['password']);
+        $this->cctvSource['database'] = (string) env('CCTV_SOURCE_DB_NAME', $this->cctvSource['database']);
+        $this->cctvSource['port'] = (int) env('CCTV_SOURCE_DB_PORT', $this->cctvSource['port']);
 
         // Ensure that we always set the database group to 'tests' if
         // we are currently running an automated test suite, so that

@@ -35,7 +35,7 @@ class Auth extends BaseController
                 ];
                 session()->set($session);
 
-                return redirect()->to('/dashboard');
+                return redirect()->to(base_url('dashboard'));
             }
 
             session()->setFlashdata('pesan', '<div class="alert alert-primary" role="alert">

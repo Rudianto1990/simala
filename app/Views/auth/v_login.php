@@ -33,7 +33,7 @@
                                 <hr>
 
                                 <div class="text-center">
-                                    <?=($data === 0 ? '<a class="small" href="' . base_url('auth/register') . '">Buat Akun</a>' : '');?>
+                                    <?=($data === 0 ? '<a class="small" href="'.base_url('auth/register').'">Buat Akun</a>' : '');?>
                                 </div>
                             </div>
                         </div>
