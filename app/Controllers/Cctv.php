@@ -16,9 +16,22 @@ class Cctv extends BaseController
 
     public function index()
     {
-        $cameras = $this->cctvModel
+        $search = trim((string) $this->request->getGet('search'));
+        $query = $this->cctvModel
             ->orderBy('id', 'DESC')
-            ->paginate(10);
+            ;
+
+        if ($search !== '') {
+            $query->groupStart()
+                ->like('nama_camera', $search)
+                ->orLike('ip_address', $search)
+                ->orLike('inventory_code', $search)
+                ->groupEnd();
+        }
+
+        $cameras = $query->paginate(10);
+        $currentPage = $this->cctvModel->pager->getCurrentPage('default');
+        $perPage = $this->cctvModel->pager->getPerPage('default');
 
         return view('cctv/index', [
             'title' => 'CCTV Monitoring',
@@ -26,6 +39,8 @@ class Cctv extends BaseController
             'heading' => 'CCTV Monitoring',
             'cameras' => $cameras,
             'pager' => $this->cctvModel->pager,
+            'no' => (($currentPage - 1) * $perPage) + 1,
+            'search' => $search,
         ]);
     }
 
@@ -33,6 +48,10 @@ class Cctv extends BaseController
     {
         try {
             $stats = (new CctvSyncService())->sync();
+            if ($stats === false) {
+                return redirect()->to('/cctv')->with('error', 'Sinkronisasi gagal. Periksa koneksi database sumber.');
+            }
+
             $this->syncMediaMtxConfig();
             $message = sprintf(
                 'Sinkronisasi selesai: %d data baru, %d data diperbarui.',

@@ -1459,3 +1459,19 @@ paths:
     source: 'rtsp://admin:C@b@ng2025@10.201.54.226:554/streaming/channels/102'
     rtspTransport: tcp
 
+  camera-456:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.244:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-457:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.245:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-458:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.239:554/Streaming/Channels/102'
+    rtspTransport: tcp
+
+  camera-459:
+    source: 'rtsp://admin:C@b@ng2025@10.201.54.240:554/Streaming/Channels/102'
+    rtspTransport: tcp
+

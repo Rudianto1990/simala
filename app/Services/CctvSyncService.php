@@ -17,20 +17,25 @@ class CctvSyncService
     /**
      * Pull the remote inventory without deleting local-only cameras.
      *
-     * @return array{inserted:int, updated:int, skipped:int}
+     * @return array{inserted:int, updated:int, skipped:int}|false
      */
-    public function sync(): array
+    public function sync(): array|false
     {
         $source = db_connect('cctvSource');
-        $rows = $source->table('productsCCTV')
+        $query = $source->table('productsCCTV')
             ->select([
                 'id', 'name', 'inventory_code', 'sub_division', 'category',
                 'jenis_kategori', 'Merk', 'serial_number', 'status', 'reg_date',
                 'location', 'ip', 'nvr', 'nomor_urut', 'link_img', 'rtsp_url',
                 'model', 'lattitude', 'longtitude', 'created_at', 'updated_at',
             ])
-            ->get()
-            ->getResultArray();
+            ->get();
+
+        if ($query === false) {
+            return false;
+        }
+
+        $rows = $query->getResultArray();
 
         $stats = ['inserted' => 0, 'updated' => 0, 'skipped' => 0];
         $localDatabase = $this->cctvModel->db;
@@ -64,7 +69,7 @@ class CctvSyncService
         $localDatabase->transComplete();
 
         if (!$localDatabase->transStatus()) {
-            throw new RuntimeException('Transaksi sinkronisasi CCTV gagal disimpan.');
+            return false;
         }
 
         return $stats;

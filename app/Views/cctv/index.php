@@ -36,12 +36,23 @@
         </div>
         <div id="cctvtable" class="col-12 mb-4">
             <div class="card shadow">
-                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Daftar Kamera</h6></div>
+                <div class="card-header py-3 d-flex justify-content-between align-items-center flex-wrap">
+                    <h6 class="m-0 font-weight-bold text-primary">Daftar Kamera</h6>
+                    <form action="<?= base_url('cctv'); ?>" method="get" class="form-inline mt-2 mt-md-0">
+                        <label for="cctvSearch" class="sr-only">Cari kamera</label>
+                        <input type="search" id="cctvSearch" name="search" value="<?= esc($search ?? ''); ?>" class="form-control form-control-sm mr-2" placeholder="Nama, IP, atau inventory code">
+                        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search mr-1"></i> Cari</button>
+                        <?php if (($search ?? '') !== '') : ?>
+                            <a href="<?= base_url('cctv'); ?>" class="btn btn-outline-secondary btn-sm ml-2">Reset</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
+                                    <th>nomor</th>
                                     <th>Nama Kamera</th>
                                     <th>Lokasi</th>
                                     <th>IP Address</th>
@@ -52,6 +63,7 @@
                             <tbody>
                                 <?php foreach ($cameras as $camera) : ?>
                                     <tr>
+                                        <td><?= $no++; ?></td>
                                         <td><?= esc($camera['nama_camera']); ?></td>
                                         <td><?= esc($camera['location']); ?></td>
                                         <td><code><?= esc($camera['ip_address']); ?></code></td>
