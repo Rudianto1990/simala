@@ -20,6 +20,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+
                     <div class="alert alert-info mb-3">
                         Klik denah untuk melihat koordinat posisi. Simpan nilai Y ke kolom <strong>latitude</strong> dan nilai X ke kolom <strong>longitude</strong>.
                     </div>
@@ -61,6 +62,9 @@
                         <code id="denahSettingsInfo" class="d-block text-dark"></code>
                         <div id="denahLiveInfo" class="small text-info mt-1"></div>
                     </div>
+=======
+
+
                     <div id="mapid" style="height: 500px;"></div>
                     <div id="map-coordinate" class="small text-muted mt-2">Koordinat denah: -</div>
                 </div>
@@ -303,6 +307,7 @@
         maxZoom: 19
     }).addTo(mymap);
 
+
     var imageWidth = 300;
     var imageHeight = 161;
     var denahBounds = [[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]];
@@ -322,7 +327,37 @@
             iconAnchor: [8, 8]
         }),
         zIndexOffset: 1000
+=======
+    var imageWidth = 302;
+    var imageHeight = 178;
+    var denahBounds = [[-6.124966236960136, 106.85526833865792], [-6.089093348571902, 106.92460999568945]];
+    var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
+        opacity: 0.82,
+        interactive: false
+
     }).addTo(mymap);
+    mymap.setView([-6.107030, 106.889939], 14);
+
+    function pixelToLatLng(positionY, positionX) {
+        var south = denahBounds[0][0];
+        var west = denahBounds[0][1];
+        var north = denahBounds[1][0];
+        var east = denahBounds[1][1];
+        return [
+            north - (positionY / imageHeight) * (north - south),
+            west + (positionX / imageWidth) * (east - west)
+        ];
+    }
+
+    function getStoredCoordinate(positionY, positionX) {
+        var isGeographic = Math.abs(positionY) <= 90 && Math.abs(positionX) <= 180 && (positionY !== 0 || positionX !== 0);
+
+        return {
+            mapPosition: isGeographic ? [positionY, positionX] : pixelToLatLng(positionY, positionX),
+            latitude: isGeographic ? positionY : pixelToLatLng(positionY, positionX)[0],
+            longitude: isGeographic ? positionX : pixelToLatLng(positionY, positionX)[1]
+        };
+    }
 
     mymap.on('click', function (event) {
         var x = Math.round(((event.latlng.lng - denahBounds[0][1]) / (denahBounds[1][1] - denahBounds[0][1])) * imageWidth);
@@ -609,6 +644,7 @@
         });
     }
 
+
     function updateDenahSettingsInfo() {
         var overlayWidth = denahBounds[1][1] - denahBounds[0][1];
         var overlayHeight = denahBounds[1][0] - denahBounds[0][0];
@@ -783,17 +819,77 @@
     setMarkerMode('alat');
     updateDenahSettingsInfo();
     setDenahLockState(true);
+=======
+    renderMarkers();
+    renderCctvMarkers();
 
-    function switchLayout(facilityId) {
-        var facility = facilityData.find(function (item) {
-            return Number(item.id) === Number(facilityId);
+
+    var currentLayout = '<?= $activeLayout ?? "baso"; ?>';
+
+    var mainBounds = [[-6.124966236960136, 106.85526833865792], [-6.089093348571902, 106.92460999568945]];
+
+    var layoutConfigs = {
+        baso: {
+            name: 'Layout BASO',
+            center: [-6.102432, 106.890812],
+
+            zoom: 14,
+            bounds:[[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]],
+            imageWidth: 300,
+            imageHeight: 161,
+            imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
+            zoom: 14
+
+        },
+        kalijapat: {
+            name: 'Layout Dermaga Kalijapat',
+            center: [-6.1148, 106.8632],
+            zoom: 16
+        },
+        dermaga_a: {
+            name: 'Layout Dermaga A',
+            center: [-6.1085, 106.8785],
+            zoom: 16
+        },
+        dermaga_b: {
+            name: 'Layout Dermaga B',
+            center: [-6.1040, 106.8845],
+            zoom: 16
+        },
+        dermaga_c: {
+            name: 'Layout Dermaga C',
+            center: [-6.0995, 106.8910],
+            zoom: 16
+        }
+    };
+
+    function switchLayout(layoutName) {
+        if (!layoutConfigs[layoutName]) return;
+        currentLayout = layoutName;
+        var config = layoutConfigs[layoutName];
+
+        mymap.flyTo(config.center, config.zoom, { duration: 1.2 });
+
+        var layoutKeys = ['baso', 'kalijapat', 'dermaga_a', 'dermaga_b', 'dermaga_c'];
+        var idSuffixes = {
+            baso: 'Baso',
+            kalijapat: 'Kalijapat',
+            dermaga_a: 'DermagaA',
+            dermaga_b: 'DermagaB',
+            dermaga_c: 'DermagaC'
+        };
+
+        layoutKeys.forEach(function(k) {
+            var s = idSuffixes[k];
+            var btn = document.getElementById('btnLayout' + s);
+            var mapBtn = document.getElementById('mapBtn' + s);
+            if (btn) {
+                btn.className = (k === layoutName) ? 'btn btn-sm btn-primary active' : 'btn btn-sm btn-outline-primary';
+            }
+            if (mapBtn) {
+                mapBtn.className = (k === layoutName) ? 'btn btn-xs btn-primary font-weight-bold' : 'btn btn-xs btn-outline-primary font-weight-bold';
+            }
         });
-
-        if (!facility) return;
-
-        selectedFacilityId = Number(facility.id);
-        denahOverlay.setUrl(facility.image_url);
-        updateDenahSettingsInfo();
     }
 
     if (selectedFacility) {

@@ -1,1 +1,5 @@
+
 writable/session/*
+=======
+writable/logs/*.log
+
