@@ -56,6 +56,57 @@
                 background-color: rgba(4, 128, 107, 0.64);
                 color: #ffffff;
             }
+
+            @media (min-width: 768px) {
+                #accordionSidebar {
+                    position: fixed;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    z-index: 1030;
+                    overflow-y: auto;
+                }
+
+                #content-wrapper {
+                    margin-left: 14rem;
+                    width: calc(100% - 14rem);
+                }
+
+                #content-wrapper #content {
+                    padding-top: 4.375rem;
+                }
+
+                .topbar {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    left: 14rem;
+                    z-index: 1020;
+                }
+
+                body.sidebar-toggled #content-wrapper {
+                    margin-left: 6.5rem;
+                    width: calc(100% - 6.5rem);
+                }
+
+                body.sidebar-toggled .topbar {
+                    left: 6.5rem;
+                }
+            }
+
+            @media (max-width: 767.98px) {
+                .topbar {
+                    position: fixed;
+                    top: 0;
+                    right: 0;
+                    left: 0;
+                    z-index: 1020;
+                }
+
+                #content-wrapper #content {
+                    padding-top: 4.375rem;
+                }
+            }
         </style>
 
         <!-- Custom styles for this page -->
@@ -103,6 +154,12 @@
                     <a class="nav-link" href="<?=base_url('form/dataalat');?>">
                         <i class="fas fa-fw fa-wrench"></i>
                         <span>Data Alat</span></a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="<?=base_url('fasilitas');?>">
+                        <i class="fas fa-fw fa-building"></i>
+                        <span>Data Fasilitas</span></a>
                 </li>
 
                 <li class="nav-item">
