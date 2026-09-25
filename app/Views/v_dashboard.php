@@ -39,6 +39,7 @@
                     </div>
                 </div>
                 <div class="card-body">
+
                     <div class="alert alert-info mb-3">
                         Klik denah untuk melihat koordinat posisi. Simpan nilai Y ke kolom <strong>latitude</strong> dan nilai X ke kolom <strong>longitude</strong>.
                     </div>
@@ -80,6 +81,9 @@
                         <code id="denahSettingsInfo" class="d-block text-dark"></code>
                         <div id="denahLiveInfo" class="small text-info mt-1"></div>
                     </div>
+=======
+
+
                     <div id="mapid" style="height: 500px;"></div>
                     <div id="map-coordinate" class="small text-muted mt-2">Koordinat denah: -</div>
                 </div>
@@ -302,6 +306,7 @@
         maxZoom: 19
     }).addTo(mymap);
 
+
     var imageWidth = 300;
     var imageHeight = 161;
     var denahBounds = [[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]];
@@ -324,7 +329,16 @@
             iconAnchor: [8, 8]
         }),
         zIndexOffset: 1000
+=======
+    var imageWidth = 302;
+    var imageHeight = 178;
+    var denahBounds = [[-6.124966236960136, 106.85526833865792], [-6.089093348571902, 106.92460999568945]];
+    var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
+        opacity: 0.82,
+        interactive: false
+
     }).addTo(mymap);
+    mymap.setView([-6.107030, 106.889939], 14);
 
     function pixelToLatLng(positionY, positionX) {
         var south = denahBounds[0][0];
@@ -338,7 +352,7 @@
     }
 
     function getStoredCoordinate(positionY, positionX) {
-        var isGeographic = positionY < 0 && positionX > 90;
+        var isGeographic = Math.abs(positionY) <= 90 && Math.abs(positionX) <= 180 && (positionY !== 0 || positionX !== 0);
 
         return {
             mapPosition: isGeographic ? [positionY, positionX] : pixelToLatLng(positionY, positionX),
@@ -569,6 +583,7 @@
         });
     }
 
+
     function updateDenahSettingsInfo() {
         var overlayWidth = denahBounds[1][1] - denahBounds[0][1];
         var overlayHeight = denahBounds[1][0] - denahBounds[0][0];
@@ -741,54 +756,48 @@
     renderCctvMarkers();
     updateDenahSettingsInfo();
     setDenahLockState(true);
+=======
+    renderMarkers();
+    renderCctvMarkers();
+
 
     var currentLayout = '<?= $activeLayout ?? "baso"; ?>';
+
+    var mainBounds = [[-6.124966236960136, 106.85526833865792], [-6.089093348571902, 106.92460999568945]];
 
     var layoutConfigs = {
         baso: {
             name: 'Layout BASO',
             center: [-6.102432, 106.890812],
+
             zoom: 14,
             bounds:[[-6.122599236486045, 106.85564050487093], [-6.089520085244972, 106.92418102745674]],
             imageWidth: 300,
             imageHeight: 161,
             imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
+=======
+            zoom: 14
+
         },
         kalijapat: {
             name: 'Layout Dermaga Kalijapat',
             center: [-6.1148, 106.8632],
-            zoom: 16,
-            bounds: [[-6.1265, 106.8540], [-6.1065, 106.8730]],
-            imageWidth: 302,
-            imageHeight: 266,
-            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+            zoom: 16
         },
         dermaga_a: {
             name: 'Layout Dermaga A',
             center: [-6.1085, 106.8785],
-            zoom: 16,
-            bounds: [[-6.1200, 106.8690], [-6.1000, 106.8880]],
-            imageWidth: 302,
-            imageHeight: 266,
-            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+            zoom: 16
         },
         dermaga_b: {
             name: 'Layout Dermaga B',
             center: [-6.1040, 106.8845],
-            zoom: 16,
-            bounds: [[-6.1155, 106.8750], [-6.0955, 106.8940]],
-            imageWidth: 302,
-            imageHeight: 266,
-            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+            zoom: 16
         },
         dermaga_c: {
             name: 'Layout Dermaga C',
             center: [-6.0995, 106.8910],
-            zoom: 16,
-            bounds: [[-6.1110, 106.8815], [-6.0910, 106.9005]],
-            imageWidth: 302,
-            imageHeight: 266,
-            imageUrl: '<?= base_url('img/denah/kalijapat.png'); ?>'
+            zoom: 16
         }
     };
 
@@ -798,20 +807,6 @@
         var config = layoutConfigs[layoutName];
 
         mymap.flyTo(config.center, config.zoom, { duration: 1.2 });
-
-        denahBounds = config.bounds;
-        imageWidth = config.imageWidth;
-        imageHeight = config.imageHeight;
-
-        if (config.imageUrl && typeof denahOverlay.setUrl === 'function') {
-            denahOverlay.setUrl(config.imageUrl);
-        }
-        denahOverlay.setBounds(denahBounds);
-        resizeHandle.setLatLng(denahBounds[1]);
-
-        syncDenahInputs();
-        renderMarkers();
-        updateDenahSettingsInfo();
 
         var layoutKeys = ['baso', 'kalijapat', 'dermaga_a', 'dermaga_b', 'dermaga_c'];
         var idSuffixes = {
