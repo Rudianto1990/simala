@@ -20,6 +20,15 @@ $routes->get('dashboard/dermaga_a', 'Dashboard::dermaga_a', ['filter' => 'ceklog
 $routes->get('dashboard/dermaga_b', 'Dashboard::dermaga_b', ['filter' => 'ceklogin']);
 $routes->get('dashboard/dermaga_c', 'Dashboard::dermaga_c', ['filter' => 'ceklogin']);
 
+$routes->group('fasilitas', ['filter' => 'ceklogin'], static function ($routes) {
+    $routes->get('/', 'Facility::index');
+    $routes->get('create', 'Facility::create');
+    $routes->post('store', 'Facility::store');
+    $routes->get('edit/(:num)', 'Facility::edit/$1');
+    $routes->post('update/(:num)', 'Facility::update/$1');
+    $routes->get('delete/(:num)', 'Facility::delete/$1');
+});
+
 $routes->group('cctv', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Cctv::index');
     $routes->post('sync', 'Cctv::sync');

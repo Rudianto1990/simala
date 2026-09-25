@@ -49,7 +49,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                        <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
                             <thead>
                                 <tr>
                                     <th>nomor</th>
@@ -84,9 +84,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="d-flex justify-content-center mt-3 overflow-auto">
-                        <?= $pager->links('default', 'cctv'); ?>
-                    </div>
                     <?php if (!$cameras) : ?><div class="text-muted text-center py-3">Belum ada data CCTV.</div><?php endif; ?>
                 </div>
             </div>
@@ -98,7 +95,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="previewModalTitle">Preview CCTV</h5>
+                <h5 class="modal-title" id="previewModalTitle">DATA DETAIL CCTV</h5>
                 <div class="ml-auto d-flex align-items-center">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span aria-hidden="true">&times;</span></button>
                 </div>
@@ -116,7 +113,7 @@
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     var cctvData = <?= json_encode($cameras, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-    var cctvMap = L.map('cctvmap').setView([-6.103, 106.883], 14);
+    var cctvMap = L.map('cctvmap').setView([-6.1049, 106.8863], 15);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; OpenStreetMap contributors'

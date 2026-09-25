@@ -11,26 +11,7 @@
         <div class="col">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-                    <div class="d-flex flex-wrap align-items-center mb-2 mb-md-0">
-                        <h6 class="m-0 font-weight-bold text-primary mr-3 mb-2 mb-sm-0">Peta Monitoring Alat</h6>
-                        <div class="btn-group shadow-sm" role="group" aria-label="Toggle Layout Peta">
-                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'baso' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutBaso" onclick="switchLayout('baso')">
-                                <i class="fas fa-layer-group mr-1"></i> BASO
-                            </button>
-                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'kalijapat' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutKalijapat" onclick="switchLayout('kalijapat')">
-                                <i class="fas fa-anchor mr-1"></i> Dermaga Kalijapat
-                            </button>
-                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_a' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaA" onclick="switchLayout('dermaga_a')">
-                                <i class="fas fa-ship mr-1"></i> Dermaga A
-                            </button>
-                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_b' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaB" onclick="switchLayout('dermaga_b')">
-                                <i class="fas fa-ship mr-1"></i> Dermaga B
-                            </button>
-                            <button type="button" class="btn btn-sm <?= ($activeLayout ?? 'baso') === 'dermaga_c' ? 'btn-primary active' : 'btn-outline-primary'; ?>" id="btnLayoutDermagaC" onclick="switchLayout('dermaga_c')">
-                                <i class="fas fa-ship mr-1"></i> Dermaga C
-                            </button>
-                        </div>
-                    </div>
+                 
                     <div class="d-flex flex-wrap gap-2 align-items-center">
                         <span class="badge badge-pill" style="background:#d9534f; color:#fff; padding:6px 10px;">MBC</span>
                         <span class="badge badge-pill" style="background:#5cb85c; color:#fff; padding:6px 10px;">RTG</span>
@@ -87,6 +68,28 @@
                     <div id="mapid" style="height: 500px;"></div>
                     <div id="map-coordinate" class="small text-muted mt-2">Koordinat denah: -</div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="facilityDetailModal" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="facilityDetailTitle">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="facilityDetailTitle">Detail Fasilitas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Tutup"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <img id="facilityDetailImage" class="img-fluid rounded mb-3" alt="Gambar fasilitas">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">ID</dt><dd class="col-sm-8" id="facilityDetailId"></dd>
+                    <dt class="col-sm-4">Nama</dt><dd class="col-sm-8" id="facilityDetailName"></dd>
+                    <dt class="col-sm-4">Deskripsi</dt><dd class="col-sm-8" id="facilityDetailDescription"></dd>
+                    <dt class="col-sm-4">Luas</dt><dd class="col-sm-8" id="facilityDetailArea"></dd>
+                    <dt class="col-sm-4">Latitude</dt><dd class="col-sm-8" id="facilityDetailLatitude"></dd>
+                    <dt class="col-sm-4">Longitude</dt><dd class="col-sm-8" id="facilityDetailLongitude"></dd>
+                </dl>
             </div>
         </div>
     </div>
@@ -189,44 +192,15 @@
 <script>
     var alatData = <?= json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
     var cctvData = <?= json_encode($cctv ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-    var denahUrl = '<?= base_url(($activeLayout ?? "baso") === "kalijapat" ? "img/denah/kalijapat.png" : "img/denah/denah.png"); ?>';
+    var facilityData = <?= json_encode($facilities ?? [], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    var selectedFacilityId = <?= (int) ($selectedFacilityId ?? 0); ?>;
 
-    function getCategoryKey(item) {
-        var nama = (item.nama_alat || '').toUpperCase();
-
-        if (nama.indexOf('MBC') !== -1 || nama.indexOf('MOBILE CRANE') !== -1 || nama.indexOf('CONTAINER CRANE') !== -1) {
-            return 'mbc';
-        }
-
-        if (nama.indexOf('GANTRY') !== -1 || nama.indexOf('RTG') !== -1) {
-            return 'rtg';
-        }
-
-        if (nama.indexOf('OHC') !== -1 || nama.indexOf('OVERHEAD CRANE') !== -1 || nama.indexOf('REACH STACKER') !== -1) {
-            return 'ohc';
-        }
-
-        if (nama.indexOf('LOADER') !== -1 || nama.indexOf('SIDE LOADER') !== -1 || nama.indexOf('TOP LOADER') !== -1 || nama.indexOf('SL') !== -1 || nama.indexOf('TL') !== -1) {
-            return 'sltl';
-        }
-
-        return 'mbc';
-    }
-
-    function getMarkerColor(categoryKey) {
-        var colors = {
-            mbc: '#d9534f',
-            rtg: 'rgb(14, 247, 45)',
-            ohc: '#f0c419',
-            sltl: '#f0ad4e'
-        };
-
-        return colors[categoryKey] || '#d9534f';
-    }
+    var selectedFacility = <?= json_encode($selectedFacility ?? null, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+    var denahUrl = selectedFacility ? selectedFacility.image_url : '';
 
     var mymap = L.map('mapid', {
         zoomControl: false
-    }).setView([-6.103, 106.883], 14);
+    }).setView([-6.1049, 106.8863], 15);
 
     L.control.zoom({
         position: 'topright',
@@ -288,18 +262,45 @@
             container.style.padding = '4px';
             container.style.borderRadius = '4px';
             container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
-            container.innerHTML = '<div class="btn-group btn-group-toggle" role="group">' +
-                '<button type="button" class="btn btn-xs btn-primary font-weight-bold" id="mapBtnBaso" onclick="switchLayout(\'baso\')" style="font-size:11px; padding:3px 8px;">BASO</button>' +
-                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnKalijapat" onclick="switchLayout(\'kalijapat\')" style="font-size:11px; padding:3px 8px;">Dermaga Kalijapat</button>' +
-                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaA" onclick="switchLayout(\'dermaga_a\')" style="font-size:11px; padding:3px 8px;">Dermaga A</button>' +
-                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaB" onclick="switchLayout(\'dermaga_b\')" style="font-size:11px; padding:3px 8px;">Dermaga B</button>' +
-                '<button type="button" class="btn btn-xs btn-outline-primary font-weight-bold" id="mapBtnDermagaC" onclick="switchLayout(\'dermaga_c\')" style="font-size:11px; padding:3px 8px;">Dermaga C</button>' +
-                '</div>';
+            var options = facilityData.map(function (facility) {
+                var selected = Number(facility.id) === selectedFacilityId ? ' selected' : '';
+                return '<option value="' + Number(facility.id) + '"' + selected + '>' + escapeMapHtml(facility.nama) + '</option>';
+            }).join('');
+            container.innerHTML = '<label for="facilitySelector" class="sr-only">Pilih fasilitas</label>' +
+                '<select id="facilitySelector" class="form-control form-control-sm" style="min-width:170px;">' + options + '</select>';
+            container.querySelector('select').addEventListener('change', function () {
+                switchLayout(Number(this.value));
+            });
             L.DomEvent.disableClickPropagation(container);
             return container;
         }
     });
     new LayoutToggleControl().addTo(mymap);
+
+    var MarkerTypeControl = L.Control.extend({
+        options: {
+            position: 'topleft'
+        },
+        onAdd: function (map) {
+            var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
+            container.style.backgroundColor = '#fff';
+            container.style.padding = '4px';
+            container.style.borderRadius = '4px';
+            container.style.boxShadow = '0 2px 6px rgba(0,0,0,0.2)';
+            container.innerHTML = '<label for="markerTypeSelector" class="sr-only">Pilih marker peta</label>' +
+                '<select id="markerTypeSelector" class="form-control form-control-sm" style="min-width:170px;">' +
+                '<option value="alat">Marker Alat Berat</option>' +
+                '<option value="cctv">Marker CCTV</option>' +
+                '<option value="fasilitas">Marker Fasilitas</option>' +
+                '</select>';
+            container.querySelector('select').addEventListener('change', function () {
+                setMarkerMode(this.value);
+            });
+            L.DomEvent.disableClickPropagation(container);
+            return container;
+        }
+    });
+    new MarkerTypeControl().addTo(mymap);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -314,9 +315,6 @@
         opacity: 0.82,
         interactive: true
     }).addTo(mymap);
-    mymap.setView([-6.102432, 106.890812], 14);
-
-
     var dragState = null;
     var resizeState = null;
     var denahLocked = true;
@@ -370,8 +368,71 @@
 
     var markerLayer = L.layerGroup().addTo(mymap);
     var cctvMarkerLayer = L.layerGroup().addTo(mymap);
+    var facilityMarkerLayer = L.layerGroup().addTo(mymap);
     var cctvSnapshotUrl = '<?= base_url('cctv/snapshot'); ?>';
     var cctvLiveTimers = {};
+    var markerMode = 'alat';
+
+    function setMarkerMode(mode) {
+        markerMode = ['alat', 'cctv', 'fasilitas'].indexOf(mode) !== -1 ? mode : 'alat';
+
+        if (markerMode === 'cctv') {
+            cctvMarkerLayer.addTo(mymap);
+            markerLayer.removeFrom(mymap);
+            facilityMarkerLayer.removeFrom(mymap);
+            return;
+        }
+
+        if (markerMode === 'fasilitas') {
+            facilityMarkerLayer.addTo(mymap);
+            markerLayer.removeFrom(mymap);
+            cctvMarkerLayer.removeFrom(mymap);
+            return;
+        }
+
+        markerLayer.addTo(mymap);
+        cctvMarkerLayer.removeFrom(mymap);
+        facilityMarkerLayer.removeFrom(mymap);
+    }
+
+    function showFacilityDetail(facility) {
+        document.getElementById('facilityDetailTitle').textContent = facility.nama || 'Detail Fasilitas';
+        document.getElementById('facilityDetailId').textContent = facility.id || '-';
+        document.getElementById('facilityDetailName').textContent = facility.nama || '-';
+        document.getElementById('facilityDetailDescription').textContent = facility.deskripsi || '-';
+        document.getElementById('facilityDetailArea').textContent = facility.luas || '-';
+        document.getElementById('facilityDetailLatitude').textContent = facility.latitude || '-';
+        document.getElementById('facilityDetailLongitude').textContent = facility.longitude || '-';
+
+        var image = document.getElementById('facilityDetailImage');
+        image.src = facility.image_url || '';
+        image.alt = facility.nama || 'Gambar fasilitas';
+        image.style.display = facility.image_url ? 'block' : 'none';
+        $('#facilityDetailModal').modal('show');
+    }
+
+    function renderFacilityMarkers() {
+        facilityMarkerLayer.clearLayers();
+
+        facilityData.forEach(function (facility) {
+            var latitude = Number(facility.latitude);
+            var longitude = Number(facility.longitude);
+            if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return;
+
+            var facilityIcon = L.divIcon({
+                className: 'facility-map-marker',
+                html: '<i class="fas fa-building" style="color:#0d6efd;font-size:28px;text-shadow:0 1px 2px #fff;"></i>',
+                iconSize: [28, 28],
+                iconAnchor: [14, 14]
+            });
+            var marker = L.marker([latitude, longitude], {icon: facilityIcon})
+                .bindTooltip(facility.nama || 'Fasilitas')
+                .addTo(facilityMarkerLayer);
+            marker.on('click', function () {
+                showFacilityDetail(facility);
+            });
+        });
+    }
 
     function renderCctvMarkers() {
         cctvMarkerLayer.clearLayers();
@@ -484,13 +545,15 @@
             return;
         }
 
-        var categoryKey = getCategoryKey(item);
-        var markerColor = getMarkerColor(categoryKey);
-        var foto = item.foto_alat ? '<?= base_url('img/alat'); ?>/' + item.foto_alat : '<?= base_url('img/alat/default.png'); ?>';
-        var latitude = Number(item.latitude);
-        var longitude = Number(item.longitude);
-        var coordinate = getStoredCoordinate(positionY, positionX);
-        var googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + coordinate.latitude + ',' + coordinate.longitude;
+        var categoryKey = item.category;
+        var markerColor = item.marker_color;
+        var foto = item.foto_url;
+        var coordinate = {
+            mapPosition: [Number(item.map_latitude), Number(item.map_longitude)],
+            latitude: Number(item.map_latitude),
+            longitude: Number(item.map_longitude)
+        };
+        var googleMapsUrl = item.google_maps_url;
 
         var popup = '<div style="min-width:220px;">' +
             '<img src="' + foto + '" class="img-fluid mb-2" style="max-height:120px; width:100%; object-fit:cover;">' +
@@ -505,9 +568,7 @@
         var isRtg = categoryKey === 'rtg';
         var isMbc = categoryKey === 'mbc';
         var isOhc = categoryKey === 'ohc';
-        var markerIcon = categoryKey === 'mbc' ? 'fa-truck-moving' :
-            (categoryKey === 'rtg' ? 'fa-warehouse' :
-            (categoryKey === 'ohc' ? 'fa-ship' : 'fa-boxes'));
+        var markerIcon = item.marker_icon;
         //var assetLabel = (item.kode_alat || '-') + ' - ' + (item.nama_alat || '-');
         //var assetLabel = (item.kode_alat || '-');
         var assetLabel = '';
@@ -754,6 +815,8 @@
 
     renderMarkers();
     renderCctvMarkers();
+    renderFacilityMarkers();
+    setMarkerMode('alat');
     updateDenahSettingsInfo();
     setDenahLockState(true);
 =======
@@ -775,7 +838,6 @@
             imageWidth: 300,
             imageHeight: 161,
             imageUrl: '<?= base_url('img/denah/denah.png'); ?>'
-=======
             zoom: 14
 
         },
@@ -830,8 +892,8 @@
         });
     }
 
-    if (layoutConfigs[currentLayout]) {
-        switchLayout(currentLayout);
+    if (selectedFacility) {
+        switchLayout(selectedFacility.id);
     }
 </script>
 <?= $this->endSection(); ?>
