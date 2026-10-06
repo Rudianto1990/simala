@@ -201,8 +201,8 @@ class Cctv extends BaseController
         }
 
         $parts = parse_url($configuredUrl);
-        $scheme = $this->request->getUri()->getScheme() ?: ($parts['scheme'] ?? 'http');
-        $host = $this->request->getUri()->getHost() ?: ($parts['host'] ?? '127.0.0.1');
+        $scheme = $parts['scheme'] ?? ($this->request->getUri()->getScheme() ?: 'http');
+        $host = $parts['host'] ?? ($this->request->getUri()->getHost() ?: '127.0.0.1');
         $port = $parts['port'] ?? $defaultPort;
 
         return $scheme . '://' . $host . ':' . $port;
