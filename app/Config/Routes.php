@@ -19,6 +19,8 @@ $routes->get('dashboard/kalijapat', 'Dashboard::kalijapat', ['filter' => 'ceklog
 $routes->get('dashboard/dermaga_a', 'Dashboard::dermaga_a', ['filter' => 'ceklogin']);
 $routes->get('dashboard/dermaga_b', 'Dashboard::dermaga_b', ['filter' => 'ceklogin']);
 $routes->get('dashboard/dermaga_c', 'Dashboard::dermaga_c', ['filter' => 'ceklogin']);
+$routes->get('settings', 'Settings::index', ['filter' => 'ceklogin']);
+$routes->post('settings/save', 'Settings::save', ['filter' => 'ceklogin']);
 
 $routes->group('fasilitas', ['filter' => 'ceklogin'], static function ($routes) {
     $routes->get('/', 'Facility::index');
@@ -55,3 +57,4 @@ $routes->group('form', ['filter' => 'ceklogin'], static function ($routes) {
 });
 
 $routes->get('alat/(:segment)', 'Form::detail/$1');
+

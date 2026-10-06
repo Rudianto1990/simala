@@ -23,6 +23,45 @@
                     <div class="alert alert-info mb-3">
                         Klik denah untuk melihat koordinat posisi. Simpan nilai Y ke kolom <strong>latitude</strong> dan nilai X ke kolom <strong>longitude</strong>.
                     </div>
+                    <div class="border rounded p-3 mb-3 bg-light">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>Penyesuaian overlay denah</strong>
+                            <small class="text-muted">Nilai ini sementara untuk mencari posisi dan ukuran yang tepat.</small>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-2">
+                                <label for="imageWidth">imageWidth</label>
+                                <input type="number" id="imageWidth" class="form-control form-control-sm" value="304" min="1" step="1" disabled>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="imageHeight">imageHeight</label>
+                                <input type="number" id="imageHeight" class="form-control form-control-sm" value="162" min="1" step="1" disabled>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="boundSouth">South</label>
+                                <input type="number" id="boundSouth" class="form-control form-control-sm" value="-6.129" step="0.000001" disabled>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="boundWest">West</label>
+                                <input type="number" id="boundWest" class="form-control form-control-sm" value="106.845" step="0.000001" disabled>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="boundNorth">North</label>
+                                <input type="number" id="boundNorth" class="form-control form-control-sm" value="-6.055" step="0.000001" disabled>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="boundEast">East</label>
+                                <input type="number" id="boundEast" class="form-control form-control-sm" value="106.955" step="0.000001" disabled>
+                            </div>
+                        </div>
+                        <button type="button" id="toggleDenahLock" class="btn btn-sm btn-secondary"><i class="fas fa-lock mr-1"></i>Buka kunci</button>
+                        <button type="button" id="applyDenahSettings" class="btn btn-sm btn-primary" disabled>Simpan penyesuaian</button>
+                        <span class="small text-muted ml-2">Tarik gambar untuk memindahkan. Tarik handle di sudut kanan-atas untuk mengubah ukuran.</span>
+                        <div class="mt-2 small text-muted">Konfigurasi aktif:</div>
+                        <code id="denahSettingsInfo" class="d-block text-dark"></code>
+                        <div id="denahLiveInfo" class="small text-info mt-1"></div>
+                        <div id="denahSaveStatus" class="small mt-2" role="status" aria-live="polite"></div>
+                    </div>
                     <div id="mapid" style="height: 500px;"></div>
                     <div id="map-coordinate" class="small text-muted mt-2">Koordinat denah: -</div>
                 </div>
@@ -273,7 +312,20 @@
     ];
     var denahOverlay = L.imageOverlay(denahUrl, denahBounds, {
         opacity: 0.82,
-        interactive: false
+        interactive: true
+    }).addTo(mymap);
+    var dragState = null;
+    var resizeState = null;
+    var denahLocked = true;
+    var resizeHandle = L.marker(denahBounds[1], {
+        draggable: true,
+        icon: L.divIcon({
+            className: 'denah-resize-handle',
+            html: '<div style="width:16px;height:16px;background:#fff;border:2px solid #007bff;border-radius:3px;box-shadow:0 1px 4px rgba(0,0,0,.45);cursor:nwse-resize;"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        }),
+        zIndexOffset: 1000
     }).addTo(mymap);
 
     mymap.on('click', function (event) {
@@ -561,10 +613,235 @@
         });
     }
 
+    function updateDenahSettingsInfo() {
+        var overlayWidth = denahBounds[1][1] - denahBounds[0][1];
+        var overlayHeight = denahBounds[1][0] - denahBounds[0][0];
+        var centerLat = (denahBounds[0][0] + denahBounds[1][0]) / 2;
+        var centerLng = (denahBounds[0][1] + denahBounds[1][1]) / 2;
+
+        document.getElementById('denahSettingsInfo').textContent =
+            'var imageWidth = ' + imageWidth + '; var imageHeight = ' + imageHeight + '; ' +
+            'var denahBounds = [[' + denahBounds[0][0] + ', ' + denahBounds[0][1] + '], [' +
+            denahBounds[1][0] + ', ' + denahBounds[1][1] + ']];';
+        document.getElementById('denahLiveInfo').textContent =
+            'Titik tengah: [' + centerLat.toFixed(6) + ', ' + centerLng.toFixed(6) + '] | ' +
+            'Lebar geografis: ' + overlayWidth.toFixed(6) + ' | Tinggi geografis: ' + overlayHeight.toFixed(6) +
+            ' | Ukuran koordinat gambar: ' + imageWidth + ' x ' + imageHeight;
+    }
+
+    function syncDenahInputs() {
+        document.getElementById('imageWidth').value = imageWidth;
+        document.getElementById('imageHeight').value = imageHeight;
+        document.getElementById('boundSouth').value = denahBounds[0][0].toFixed(8);
+        document.getElementById('boundWest').value = denahBounds[0][1].toFixed(8);
+        document.getElementById('boundNorth').value = denahBounds[1][0].toFixed(8);
+        document.getElementById('boundEast').value = denahBounds[1][1].toFixed(8);
+    }
+
+    function startDenahDrag(event) {
+        if (denahLocked) {
+            return;
+        }
+
+        dragState = {
+            start: event.latlng,
+            bounds: [
+                [denahBounds[0][0], denahBounds[0][1]],
+                [denahBounds[1][0], denahBounds[1][1]]
+            ]
+        };
+        mymap.dragging.disable();
+        event.originalEvent.preventDefault();
+    }
+
+    function moveDenah(event) {
+        if (!dragState) {
+            return;
+        }
+
+        var deltaLat = event.latlng.lat - dragState.start.lat;
+        var deltaLng = event.latlng.lng - dragState.start.lng;
+        denahBounds = [
+            [dragState.bounds[0][0] + deltaLat, dragState.bounds[0][1] + deltaLng],
+            [dragState.bounds[1][0] + deltaLat, dragState.bounds[1][1] + deltaLng]
+        ];
+        denahOverlay.setBounds(denahBounds);
+        resizeHandle.setLatLng(denahBounds[1]);
+        syncDenahInputs();
+        renderMarkers();
+        updateDenahSettingsInfo();
+    }
+
+    function endDenahDrag() {
+        if (!dragState) {
+            return;
+        }
+
+        dragState = null;
+        mymap.dragging.enable();
+    }
+
+    resizeHandle.on('dragstart', function () {
+        if (denahLocked) {
+            resizeHandle.setLatLng(denahBounds[1]);
+            return;
+        }
+
+        resizeState = {
+            bounds: [
+                [denahBounds[0][0], denahBounds[0][1]],
+                [denahBounds[1][0], denahBounds[1][1]]
+            ],
+            imageWidth: imageWidth,
+            imageHeight: imageHeight
+        };
+        mymap.dragging.disable();
+    });
+
+    resizeHandle.on('drag', function (event) {
+        if (!resizeState) {
+            return;
+        }
+
+        var newNorth = Math.max(event.latlng.lat, resizeState.bounds[0][0] + 0.000001);
+        var newEast = Math.max(event.latlng.lng, resizeState.bounds[0][1] + 0.000001);
+        var originalWidth = resizeState.bounds[1][1] - resizeState.bounds[0][1];
+        var originalHeight = resizeState.bounds[1][0] - resizeState.bounds[0][0];
+        var newWidth = newEast - resizeState.bounds[0][1];
+        var newHeight = newNorth - resizeState.bounds[0][0];
+
+        denahBounds = [
+            [resizeState.bounds[0][0], resizeState.bounds[0][1]],
+            [newNorth, newEast]
+        ];
+        imageWidth = Math.max(1, Math.round(resizeState.imageWidth * newWidth / originalWidth));
+        imageHeight = Math.max(1, Math.round(resizeState.imageHeight * newHeight / originalHeight));
+        denahOverlay.setBounds(denahBounds);
+        syncDenahInputs();
+        renderMarkers();
+        updateDenahSettingsInfo();
+    });
+
+    resizeHandle.on('dragend', function () {
+        resizeState = null;
+        mymap.dragging.enable();
+    });
+
+    function setDenahLockState(locked) {
+        denahLocked = locked;
+
+        ['imageWidth', 'imageHeight', 'boundSouth', 'boundWest', 'boundNorth', 'boundEast'].forEach(function (id) {
+            document.getElementById(id).disabled = locked;
+        });
+        document.getElementById('applyDenahSettings').disabled = locked;
+
+        if (locked) {
+            dragState = null;
+            resizeState = null;
+            mymap.dragging.enable();
+            resizeHandle.setLatLng(denahBounds[1]);
+            resizeHandle.setOpacity(0.45);
+        } else {
+            resizeHandle.setOpacity(1);
+        }
+
+        var lockButton = document.getElementById('toggleDenahLock');
+        lockButton.innerHTML = locked
+            ? '<i class="fas fa-lock mr-1"></i>Buka kunci'
+            : '<i class="fas fa-unlock mr-1"></i>Kunci overlay';
+        lockButton.className = locked ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-warning';
+    }
+
+    denahOverlay.on('mousedown touchstart', startDenahDrag);
+    mymap.on('mousemove touchmove', moveDenah);
+    document.addEventListener('mouseup', endDenahDrag);
+    document.addEventListener('touchend', endDenahDrag);
+
+    document.getElementById('toggleDenahLock').addEventListener('click', function () {
+        setDenahLockState(!denahLocked);
+    });
+
+    document.getElementById('applyDenahSettings').addEventListener('click', function () {
+        if (denahLocked) {
+            return;
+        }
+
+        imageWidth = Number(document.getElementById('imageWidth').value);
+        imageHeight = Number(document.getElementById('imageHeight').value);
+        denahBounds = [
+            [Number(document.getElementById('boundSouth').value), Number(document.getElementById('boundWest').value)],
+            [Number(document.getElementById('boundNorth').value), Number(document.getElementById('boundEast').value)]
+        ];
+
+        if (
+            !Number.isInteger(imageWidth) || imageWidth < 1 ||
+            !Number.isInteger(imageHeight) || imageHeight < 1 ||
+            denahBounds.some(function (point) { return !point.every(Number.isFinite); }) ||
+            denahBounds[1][0] <= denahBounds[0][0] ||
+            denahBounds[1][1] <= denahBounds[0][1]
+        ) {
+            document.getElementById('denahSaveStatus').textContent = 'Ukuran dan batas overlay tidak valid.';
+            return;
+        }
+
+        denahOverlay.setBounds(denahBounds);
+        resizeHandle.setLatLng(denahBounds[1]);
+        mymap.fitBounds(denahBounds);
+        syncDenahInputs();
+        renderMarkers();
+        updateDenahSettingsInfo();
+
+        var saveStatus = document.getElementById('denahSaveStatus');
+        saveStatus.className = 'small mt-2 text-muted';
+        saveStatus.textContent = 'Menyimpan penyesuaian...';
+
+        fetch('<?= base_url('settings/save'); ?>', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+            body: new URLSearchParams({
+                facility_id: String(selectedFacilityId),
+                image_width: String(imageWidth),
+                image_height: String(imageHeight),
+                south: String(denahBounds[0][0]),
+                west: String(denahBounds[0][1]),
+                north: String(denahBounds[1][0]),
+                east: String(denahBounds[1][1])
+            })
+        }).then(function (response) {
+            return response.json().then(function (result) {
+                if (!response.ok) {
+                    throw new Error(result.message || 'Penyesuaian denah gagal disimpan.');
+                }
+                return result;
+            });
+        }).then(function (result) {
+            var facility = facilityData.find(function (item) {
+                return Number(item.id) === selectedFacilityId;
+            });
+            if (facility) {
+                facility.overlay_image_width = imageWidth;
+                facility.overlay_image_height = imageHeight;
+                facility.overlay_south = denahBounds[0][0];
+                facility.overlay_west = denahBounds[0][1];
+                facility.overlay_north = denahBounds[1][0];
+                facility.overlay_east = denahBounds[1][1];
+            }
+
+            saveStatus.className = 'small mt-2 text-success';
+            saveStatus.textContent = result.message;
+        }).catch(function (error) {
+            saveStatus.className = 'small mt-2 text-danger';
+            saveStatus.textContent = error.message || 'Penyesuaian denah gagal disimpan.';
+        });
+    });
+
     renderMarkers();
     renderCctvMarkers();
     renderFacilityMarkers();
     setMarkerMode('alat');
+    updateDenahSettingsInfo();
+    setDenahLockState(true);
+    syncDenahInputs();
 
     function switchLayout(facilityId) {
         var facility = facilityData.find(function (item) {
@@ -582,7 +859,11 @@
         ];
         denahOverlay.setUrl(facility.image_url);
         denahOverlay.setBounds(denahBounds);
+        resizeHandle.setLatLng(denahBounds[1]);
+        mymap.fitBounds(denahBounds);
+        syncDenahInputs();
         renderMarkers();
+        updateDenahSettingsInfo();
     }
 
     if (selectedFacility) {

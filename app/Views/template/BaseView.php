@@ -169,8 +169,8 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
-                       <i class="fas fa-fw fa-cogs"></i>
+                    <a class="nav-link" href="<?=base_url('settings');?>">
+                        <i class="fas fa-fw fa-cogs"></i>
                         <span>Settings</span></a>
                 </li>
 

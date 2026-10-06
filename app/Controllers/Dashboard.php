@@ -21,7 +21,7 @@ class Dashboard extends BaseController
 
     public function index()
     {
-        return $this->renderDashboard('baso');
+        return $this->renderDashboard();
     }
 
     public function kalijapat()
@@ -44,7 +44,7 @@ class Dashboard extends BaseController
         return $this->renderDashboard();
     }
 
-    private function renderDashboard()
+    protected function renderDashboard(string $view = 'v_dashboard', string $title = 'Dashboard Monitoring Alat')
     {
         $alat = array_map([$this, 'prepareAlat'], $this->MonitoringAlatModel->getAlat());
         $cctv = $this->CctvModel->orderBy('id', 'DESC')->findAll();
@@ -103,9 +103,9 @@ class Dashboard extends BaseController
         }
 
         $data = [
-            'title' => 'Dashboard Monitoring Alat',
+            'title' => $title,
             'appname' => 'SIMALA',
-            'heading' => 'Dashboard Monitoring Alat',
+            'heading' => $title,
             'data' => $alat,
             'mbc' => $mbc,
             'rtg' => $rtg,
@@ -115,9 +115,17 @@ class Dashboard extends BaseController
             'facilities' => $facilities,
             'selectedFacilityId' => $selectedFacilityId,
             'selectedFacility' => $selectedFacility,
+            'overlaySettings' => [
+                'imageWidth' => (int) ($selectedFacility['overlay_image_width'] ?? 300),
+                'imageHeight' => (int) ($selectedFacility['overlay_image_height'] ?? 161),
+                'south' => (float) ($selectedFacility['overlay_south'] ?? -6.122599236486045),
+                'west' => (float) ($selectedFacility['overlay_west'] ?? 106.85564050487093),
+                'north' => (float) ($selectedFacility['overlay_north'] ?? -6.089520085244972),
+                'east' => (float) ($selectedFacility['overlay_east'] ?? 106.92418102745674),
+            ],
         ];
 
-        return view('v_dashboard', $data);
+        return view($view, $data);
     }
 
     private function prepareFacility(array $facility): array
