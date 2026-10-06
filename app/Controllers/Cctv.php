@@ -29,17 +29,14 @@ class Cctv extends BaseController
                 ->groupEnd();
         }
 
-        $cameras = $query->paginate(10);
-        $currentPage = $this->cctvModel->pager->getCurrentPage('default');
-        $perPage = $this->cctvModel->pager->getPerPage('default');
+        $cameras = $query->findAll();
 
         return view('cctv/index', [
             'title' => 'CCTV Monitoring',
             'appname' => 'SIMALA',
             'heading' => 'CCTV Monitoring',
             'cameras' => $cameras,
-            'pager' => $this->cctvModel->pager,
-            'no' => (($currentPage - 1) * $perPage) + 1,
+            'no' => 1,
             'search' => $search,
         ]);
     }
