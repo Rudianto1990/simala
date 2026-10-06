@@ -44,7 +44,7 @@ class Dashboard extends BaseController
         return $this->renderDashboard();
     }
 
-    protected function renderDashboard(string $view = 'v_dashboard', string $title = 'Dashboard Monitoring Alat')
+    private function renderDashboard()
     {
         $alat = array_map([$this, 'prepareAlat'], $this->MonitoringAlatModel->getAlat());
         $cctv = $this->CctvModel->orderBy('id', 'DESC')->findAll();
@@ -115,17 +115,64 @@ class Dashboard extends BaseController
             'facilities' => $facilities,
             'selectedFacilityId' => $selectedFacilityId,
             'selectedFacility' => $selectedFacility,
-            'overlaySettings' => [
-                'imageWidth' => (int) ($selectedFacility['overlay_image_width'] ?? 300),
-                'imageHeight' => (int) ($selectedFacility['overlay_image_height'] ?? 161),
-                'south' => (float) ($selectedFacility['overlay_south'] ?? -6.122599236486045),
-                'west' => (float) ($selectedFacility['overlay_west'] ?? 106.85564050487093),
-                'north' => (float) ($selectedFacility['overlay_north'] ?? -6.089520085244972),
-                'east' => (float) ($selectedFacility['overlay_east'] ?? 106.92418102745674),
-            ],
         ];
 
         return view($view, $data);
+    }
+
+    private function prepareFacility(array $facility): array
+    {
+        $link = trim((string) $facility['link_gambar']);
+        $facility['image_url'] = preg_match('/^https?:\/\//i', $link)
+            ? $link
+            : base_url(ltrim($link, '/'));
+
+        return $facility;
+    }
+
+    private function prepareAlat(array $alat): array
+    {
+        $nama = strtoupper((string) ($alat['nama_alat'] ?? ''));
+        $category = 'mbc';
+
+        if (stripos($nama, 'MBC') !== false || stripos($nama, 'MOBILE CRANE') !== false || stripos($nama, 'CONTAINER CRANE') !== false) {
+            $category = 'mbc';
+        } elseif (stripos($nama, 'GANTRY') !== false || stripos($nama, 'RTG') !== false) {
+            $category = 'rtg';
+        } elseif (stripos($nama, 'OHC') !== false || stripos($nama, 'OVERHEAD CRANE') !== false || stripos($nama, 'REACH STACKER') !== false) {
+            $category = 'ohc';
+        } elseif (stripos($nama, 'LOADER') !== false || stripos($nama, 'SIDE LOADER') !== false || stripos($nama, 'TOP LOADER') !== false || stripos($nama, 'SL') !== false || stripos($nama, 'TL') !== false) {
+            $category = 'sltl';
+        }
+
+        $markerData = [
+            'mbc' => ['color' => '#d9534f', 'icon' => 'fa-truck-moving'],
+            'rtg' => ['color' => 'rgb(14, 247, 45)', 'icon' => 'fa-warehouse'],
+            'ohc' => ['color' => '#f0c419', 'icon' => 'fa-ship'],
+            'sltl' => ['color' => '#f0ad4e', 'icon' => 'fa-boxes'],
+        ][$category];
+
+        $alat['category'] = $category;
+        $alat['marker_color'] = $markerData['color'];
+        $alat['marker_icon'] = $markerData['icon'];
+        $alat['foto_url'] = base_url('img/alat/' . ($alat['foto_alat'] ?: 'default.png'));
+
+        $positionY = (float) ($alat['latitude'] ?? 0);
+        $positionX = (float) ($alat['longitude'] ?? 0);
+        if ($positionY < 0 && $positionX > 90) {
+            $alat['map_latitude'] = $positionY;
+            $alat['map_longitude'] = $positionX;
+        } else {
+            $south = -6.122599236486045;
+            $west = 106.85564050487093;
+            $north = -6.089520085244972;
+            $east = 106.92418102745674;
+            $alat['map_latitude'] = $north - ($positionY / 161) * ($north - $south);
+            $alat['map_longitude'] = $west + ($positionX / 300) * ($east - $west);
+        }
+        $alat['google_maps_url'] = 'https://www.google.com/maps/search/?api=1&query=' . $alat['map_latitude'] . ',' . $alat['map_longitude'];
+
+        return $alat;
     }
 
     private function prepareFacility(array $facility): array

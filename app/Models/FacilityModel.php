@@ -18,12 +18,6 @@ class FacilityModel extends Model
         'link_gambar',
         'latitude',
         'longitude',
-        'overlay_image_width',
-        'overlay_image_height',
-        'overlay_south',
-        'overlay_west',
-        'overlay_north',
-        'overlay_east',
     ];
 
     protected $useTimestamps = true;

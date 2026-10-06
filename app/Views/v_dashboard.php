@@ -314,9 +314,6 @@
         opacity: 0.82,
         interactive: false
     }).addTo(mymap);
-    mymap.setView([-6.102432, 106.890812], 14);
-
-
     var dragState = null;
     var resizeState = null;
     var denahLocked = true;
@@ -785,6 +782,8 @@
 
     renderMarkers();
     renderCctvMarkers();
+    renderFacilityMarkers();
+    setMarkerMode('alat');
     updateDenahSettingsInfo();
     setDenahLockState(true);
     renderMarkers();
