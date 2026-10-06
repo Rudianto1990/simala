@@ -179,37 +179,37 @@
 <script src="<?= base_url('js/leaflet/leaflet.js'); ?>"></script>
 <script>
     var denahUrl = '<?= base_url('img/denah/denah.png'); ?>';
-    var mapBounds = [[0, 0], [1000, 1600]];
-    var mymap = L.map('mapid', { crs: L.CRS.Simple, minZoom: -5, maxZoom: 4 });
-    var denahOverlay = L.imageOverlay(denahUrl, mapBounds).addTo(mymap);
-    mymap.fitBounds(mapBounds);
+    var denahBounds = [[-6.124966236960136, 106.85526833865792], [-6.089093348571902, 106.92460999568945]];
+    
+    var initialLat = Number(document.getElementById('Latitude') ? document.getElementById('Latitude').value : 0) || -6.102432;
+    var initialLng = Number(document.getElementById('Longitude') ? document.getElementById('Longitude').value : 0) || 106.890812;
 
-    denahOverlay.once('load', function () {
-        var image = denahOverlay.getElement();
-        if (image && image.naturalWidth && image.naturalHeight) {
-            mapBounds = [[0, 0], [image.naturalHeight, image.naturalWidth]];
-            denahOverlay.setBounds(mapBounds);
-            mymap.fitBounds(mapBounds);
-        }
-    });
+    var mymap = L.map('mapid').setView([initialLat, initialLng], 14);
 
-    var marker = new L.marker([
-        Number(<?= json_encode(old('latitude', $data['latitude'] ?? 0)); ?>) || 0,
-        Number(<?= json_encode(old('longitude', $data['longitude'] ?? 0)); ?>) || 0
-    ], { draggable: true });
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(mymap);
+
+    L.imageOverlay(denahUrl, denahBounds, { opacity: 0.82, interactive: false }).addTo(mymap);
+
+    var marker = L.marker([initialLat, initialLng], { draggable: true }).addTo(mymap);
+
+    function updateInputs(lat, lng) {
+        var latInput = document.getElementById('Latitude');
+        var lngInput = document.getElementById('Longitude');
+        if (latInput) latInput.value = lat.toFixed(6);
+        if (lngInput) lngInput.value = lng.toFixed(6);
+    }
+
     marker.on('dragend', function (event) {
-        var position = marker.getLatLng();
-        document.getElementById('Latitude').value = Math.round(position.lat);
-        document.getElementById('Longitude').value = Math.round(position.lng);
+        var pos = marker.getLatLng();
+        updateInputs(pos.lat, pos.lng);
     });
-
-    mymap.addLayer(marker);
 
     mymap.on('click', function (e) {
-        var position = e.latlng;
-        marker.setLatLng(position);
-        document.getElementById('Latitude').value = Math.round(position.lat);
-        document.getElementById('Longitude').value = Math.round(position.lng);
+        marker.setLatLng(e.latlng);
+        updateInputs(e.latlng.lat, e.latlng.lng);
     });
 
     setTimeout(function () {
